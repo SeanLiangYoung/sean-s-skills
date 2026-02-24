@@ -1,0 +1,10 @@
+{
+  "name": "sean-s-skills",
+  "version": "1.0.0",
+  "description": "Private skill library: document/office, design, SEO, marketing, Baoyu content, dev workflow, Obsidian, agents & tools. Use when you need any of these capabilities.",
+  "repository": "https://github.com/your-username/sean-s-skills",
+  "license": "SEE LICENSE IN REPO",
+  "keywords": ["skills", "seo", "marketing", "docx", "pdf", "baoyu", "obsidian", "agents"],
+  "skills": "./skills/",
+  "agents": "./agents/"
+}

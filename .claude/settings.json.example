@@ -1,0 +1,10 @@
+{
+  "$schema": "https://code.claude.com/schemas/settings.json",
+  "_comment": "将本文件复制为 .claude/settings.json 或 .claude/settings.local.json，并按需修改路径。",
+  "plugins": [
+    {
+      "source": "path/to/sean-s-skills",
+      "strict": false
+    }
+  ]
+}
