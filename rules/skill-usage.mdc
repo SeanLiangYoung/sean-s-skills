@@ -1,0 +1,36 @@
+---
+description: 在执行操作或命令时充分利用 Skills 能力
+alwaysApply: true
+---
+
+# 充分利用 Skills 规则
+
+在执行任何操作或命令之前，**优先判断**是否有匹配的 Skill 可以提升执行质量或效率。
+
+## 核心原则
+
+1. **先查后做**：收到用户请求时，先对照技能库判断是否涉及 PDF、文档、Vue、设计、测试等场景
+2. **主动加载**：一旦匹配到 Skill，在动手前先读取并遵循该 Skill 的指导
+3. **组合使用**：复杂任务可组合多个 Skill（如 Vue + Element Plus、文档 + 主题）
+
+## 快速对照
+
+| 场景 | 应使用的 Skill |
+|------|----------------|
+| PDF、Word、Excel、PPT | pdf / docx / xlsx / pptx |
+| Vue 开发、路由、Pinia、测试 | vue-* 系列、element-plus-vue3 |
+| 网页 UI、海报、算法艺术 | frontend-design / canvas-design / algorithmic-art |
+| 测试 Web 应用、建 MCP | webapp-testing / mcp-builder |
+| 不确定选哪个 | 读取 skill-usage-guide 或 ~/.cursor/SKILLS_GUIDE.md |
+
+## 执行流程
+
+```
+用户请求 → 判断是否涉及 Skill 场景 → 是：读取对应 Skill → 按 Skill 指导执行
+                              → 否：直接执行
+```
+
+## 参考
+
+- 完整列表与决策流程：`%USERPROFILE%\.cursor\SKILLS_GUIDE.md`
+- 选择困难时：使用 skill-usage-guide

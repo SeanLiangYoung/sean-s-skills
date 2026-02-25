@@ -1,6 +1,6 @@
 # Skills 说明 — 功能与使用场景
 
-本库 **skills/** 下共 **79 个** Skill，每个为符合 [Agent Skills 规范](../spec/specification.md) 的独立能力包（至少含 `SKILL.md`，可含 `scripts/`、`references/`、`assets/`）。以下按**功能分类**列出各 Skill 的具体功能与使用场景。
+本库 **skills/** 下共 **104 个** Skill，每个为符合 [Agent Skills 规范](../spec/specification.md) 的独立能力包（至少含 `SKILL.md`，可含 `scripts/`、`references/`、`assets/`）。其中 79 个为本库原有，12 个由原用户级 user-skills 合并而来（Vue 系列、element-plus-vue3、create-adaptable-composable、import-anthropic-skills、skill-usage-guide），其余为后续集成或新增。以下按**功能分类**列出各 Skill 的具体功能与使用场景。
 
 ---
 
@@ -26,6 +26,10 @@
 | **canvas-design** | 基于 Canvas 的图形与可视化设计 | 需要图表、插画或 Canvas 绘图时使用。 |
 | **brand-guidelines** | 品牌规范与视觉/文案一致性 | 需要统一品牌视觉、用词与风格时使用。 |
 | **algorithmic-art** | 算法艺术与程序化图形 | 需要程序生成图案、艺术风格或创意可视化时使用。 |
+| **element-plus-vue3** | Element Plus Vue 3 组件库（安装、主题、国际化、API） | Vue 3 项目使用 Element Plus、定制主题或多语言时使用。 |
+| **create-adaptable-composable** | 创建可接受 MaybeRef/MaybeRefOrGetter 的 Vue composable | 需要可适配 ref/getter 输入的 composable 时使用。 |
+| **skill-usage-guide** | 帮助选择与使用 Cursor/Agent Skills | 不确定用哪个 Skill 或需要按场景选能力时使用。 |
+| **import-anthropic-skills** | 从 Anthropic 官方仓库导入 skills 到 Cursor | 需要安装或使用 anthropics/skills 中的 PDF/docx/xlsx 等能力时使用。 |
 
 ---
 
@@ -115,6 +119,14 @@
 | **dispatching-parallel-agents** | 将 2+ 独立任务分发给并行子代理 | 多个无依赖任务可并行时使用。 |
 | **subagent-driven-development** | 按任务拆分子代理驱动开发 | 计划中任务相对独立、需分代理执行时使用。 |
 | **test-driven-development** | TDD：先写测试、红-绿-重构 | 做功能或修 bug 前，采用 TDD 时使用。 |
+| **vue-best-practices** | Vue 3 Composition API、&lt;script setup&gt;、TypeScript 等最佳实践 | Vue 开发时优先加载，规范写法与工程约定。 |
+| **vue-development-guides** | Vue 开发、重构与代码审查的实践与技巧 | 开发/重构/评审 Vue 或 Nuxt 项目时使用。 |
+| **vue-debug-guides** | Vue 3 运行时错误、警告、SSR/水合问题排查 | 诊断或修复 Vue 报错、控制台警告、水合错误时使用。 |
+| **vue-testing-best-practices** | Vitest、Vue Test Utils、组件测试、E2E（Playwright） | Vue 单测与 E2E 时使用。 |
+| **vue-router-best-practices** | Vue Router 4 路由、守卫、params 与生命周期 | 路由、导航守卫、动态路由时使用。 |
+| **vue-pinia-best-practices** | Pinia 状态、store 设置与响应式 | Pinia 仓库、状态管理时使用。 |
+| **vue-jsx-best-practices** | Vue 中 JSX 语法（class/className、插件配置） | 使用 JSX 写 Vue 时使用。 |
+| **vue-options-api-best-practices** | Vue 3 Options API（data、methods、this） | 仅用 Options API 时参考。 |
 | **systematic-debugging** | 系统性排查 bug/失败/异常 | 遇到 bug、测试失败或异常行为、在提出修复前系统排查时使用。 |
 | **verification-before-completion** | 在声称完成/修复/通过前必须跑验证并出示结果 | 准备说「完成了」「修好了」「通过了」之前，先跑验证命令并确认输出时使用。 |
 | **requesting-code-review** | 完成任务或大功能后请求代码评审 | 完成主要功能或合并前，请求评审时使用。 |

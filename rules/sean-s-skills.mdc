@@ -1,0 +1,15 @@
+---
+description: 本项目为 Sean's Skills 库；在此项目中应优先使用 skills/、agents/、tools/ 中的能力完成文档、SEO、营销、图文、开发流程等任务
+globs: 
+alwaysApply: true
+---
+
+# Sean's Skills 库 — Cursor 规则
+
+本仓库是私人 Skill 库，包含 79 个 Skill、7 个 Agent、工具注册与模板。在 Cursor 中工作时：
+
+1. **优先查阅能力说明**：具体功能与使用场景见项目内 [docs/capabilities-index.md](../../docs/capabilities-index.md)、[docs/skills-reference.md](../../docs/skills-reference.md)、[docs/agents-reference.md](../../docs/agents-reference.md)。
+2. **按任务选能力**：文档处理用 pdf/docx/xlsx/pptx；SEO 用 seo 或 seo-*；营销/CRO 用 skill-list 中对应项；图文/发布用 baoyu-*；开发流程用 writing-plans、test-driven-development、code-reviewer 等。
+3. **agents/**：子代理定义（如 code-reviewer、seo-content）；需专项分析或评审时加载对应 .md 内容作为角色提示。
+4. **tools/**：营销/分析工具索引与集成文档；需对接 GA4、Ahrefs、Stripe 等时查 tools/REGISTRY.md 与 tools/integrations/。
+5. **将本库能力用到其他项目**：见 [docs/cookbook.md](../../docs/cookbook.md) 的快速集成方法。

@@ -2,8 +2,10 @@
 
 以下能力已**完成拷贝与合并**（2025-02-25），每行为本库路径或来源说明。原仓库、集成状态与冲突说明见 [docs/integration-progress.md](docs/integration-progress.md)。
 
-- **skills/**：当前共 **79 个** Skill 目录。  
-- **除 skills 外**：agents/（7 个子代理）、tools/（REGISTRY + 50+ 集成文档）、templates/（Skill 模板），见下方「除 skills 外的 AI 能力」。
+- **skills/**：当前共 **104 个** Skill 目录（原 79 个与用户级 user-skills 28 个已合并，去重后 12 个新增并入；后续有增补）。  
+- **除 skills 外**：agents/（7 个子代理）、tools/（REGISTRY + 58 个集成文档）、templates/（Skill 模板），见下方「除 skills 外的 AI 能力」。
+
+**文档索引**：各 Skill 功能与使用场景见 [docs/skills-reference.md](docs/skills-reference.md)；能力总览与集成方式见 [docs/capabilities-index.md](docs/capabilities-index.md)、[docs/cookbook.md](docs/cookbook.md)。
 
 ---
 
@@ -13,7 +15,7 @@
   - seo-content.md, seo-performance.md, seo-technical.md, seo-sitemap.md, seo-schema.md, seo-visual.md（来源：Claude SEO）
   - code-reviewer.md（来源：Superpowers）
 - **tools/** — 营销/分析工具注册与集成说明
-  - REGISTRY.md, integrations/*.md（约 50+）（来源：Marketing skills）
+  - REGISTRY.md, integrations/*.md（58 个）（来源：Marketing skills）
 - **templates/** — Skill 创建模板
   - SKILL-template.md（来源：Anthropics skills）
 
@@ -37,6 +39,25 @@
 - skills/web-artifacts-builder
 - skills/webapp-testing
 - skills/xlsx
+
+---
+
+## Cursor 用户级 Skills（已合并进 skills/）
+
+以下原为 `user-skills` 独有，已并入 `skills/`，与本库原有 skill 同目录管理：
+
+- skills/create-adaptable-composable
+- skills/element-plus-vue3
+- skills/import-anthropic-skills
+- skills/skill-usage-guide
+- skills/vue-best-practices
+- skills/vue-debug-guides
+- skills/vue-development-guides
+- skills/vue-jsx-best-practices
+- skills/vue-options-api-best-practices
+- skills/vue-pinia-best-practices
+- skills/vue-router-best-practices
+- skills/vue-testing-best-practices
 
 ---
 
@@ -162,3 +183,7 @@
 - skills/verification-before-completion
 - skills/writing-plans
 - skills/writing-skills
+
+---
+
+*本列表按来源分类；完整 104 个 Skill 的目录名见 `skills/` 或 [docs/skills-reference.md](docs/skills-reference.md)。*

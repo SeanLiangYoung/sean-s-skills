@@ -252,3 +252,16 @@ skills-ref validate ./my-skill
 ```
 
 This checks that your `SKILL.md` frontmatter is valid and follows all naming conventions.
+
+---
+
+## 本仓库语境（sean-s-skills）
+
+本规范在 **sean-s-skills** 仓库中的使用方式：
+
+- **Skill 根目录**：`skills/`，当前共 **104** 个 Skill（每个目录含 `SKILL.md`，符合上述格式）。
+- **其他能力**：`agents/`（7 个子代理）、`tools/`（REGISTRY + 集成文档）、`templates/`（1 个 Skill 模板）、`rules/`（用户级 Cursor 规则）。
+- **文档索引**：项目说明见根目录 `readme.md`；能力与文档索引见 `docs/capabilities-index.md`；规范说明与使用场景见 `docs/spec-reference.md`。
+
+新建或修改 Skill 时请遵循本规范，并保持 `name` 与目录名一致。
+

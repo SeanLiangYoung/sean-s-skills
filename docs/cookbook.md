@@ -6,7 +6,9 @@
 
 ## 快速集成：一键脚本
 
-在任意目标项目中，通过脚本自动写入 Claude 与 Cursor 配置并引用本库：
+将本库的 **rules** 与「引用本库」的规则一键配置到目标项目的 **`.cursor`** 中，无需人工参与，AI 可直接使用（不复制 skills 目录，通过规则中的路径引用本库）。
+
+**Mac / Linux**（在终端执行）：
 
 ```bash
 # 从本库根目录执行
@@ -16,12 +18,22 @@
 ./scripts/integrate-into-project.sh /path/to/your-project /path/to/sean-s-skills
 ```
 
+**Windows**（在 CMD 或 PowerShell 中执行）：
+
+```batch
+scripts\integrate-into-project.bat <目标项目路径> [本库路径]
+REM 示例：
+scripts\integrate-into-project.bat ..\my-app
+scripts\integrate-into-project.bat D:\proj\my-app D:\repos\sean-s-skills
+```
+
 **脚本会：**
 
-1. 在目标项目下创建 `.claude/settings.json`，将本库作为插件路径（`source`）加入。
-2. 在目标项目下创建 `.cursor/rules/use-sean-s-skills.mdc`，规则中写明本库相对路径与能力索引文档位置，供 Cursor 优先查阅并引用 skills/agents。
+1. 在目标项目下创建 **`.cursor/rules/`**（若不存在）。
+2. 写入 **`use-sean-s-skills.mdc`**：规则中写明本库相对路径与能力索引文档位置，供 Cursor 优先查阅并引用本库的 skills/agents（104 个 Skill + 7 个 Agent）。
+3. 复制本库 **rules/** 下的 **`skill-usage.mdc`**、**`confirmation-before-action.mdc`** 到目标 `.cursor/rules/`，无需再手动复制用户级规则。
 
-**注意**：若 Claude Code 在 project 作用域下不支持通过 `settings.json` 的 `plugins` 路径加载，请在目标项目中改用「方式一」以插件目录启动。
+在 Cursor 中打开目标项目即可使用，无需其他配置。若还需在目标项目中使用 **Claude Code** 插件，请手动在目标项目添加 `.claude/settings.json` 并将本库作为 `plugins.source`，或参见下方「方式一」「方式二」。
 
 ---
 
@@ -133,8 +145,8 @@ alwaysApply: true
 
 ### 配方 5：本库自身开发与迭代
 
-- 本库已包含 `.claude-plugin/plugin.json`、`.claude/`、`.cursor/rules/`，在 Claude Code 或 Cursor 中直接打开本库即可使用全部能力。
-- 新增或修改 Skill 时参考 `spec/specification.md` 与 `templates/SKILL-template.md`，并更新 `docs/skills-reference.md` 与 `skill-list.md`。
+- 本库已包含 `.claude-plugin/plugin.json`、`.claude/`、`.cursor/rules/` 及项目根目录 **rules/**（用户级规则），在 Claude Code 或 Cursor 中直接打开本库即可使用全部 **104 个** Skill 与 7 个 Agent。
+- 新增或修改 Skill 时参考 `spec/specification.md` 与 `templates/SKILL-template.md`，并更新 `docs/skills-reference.md` 与 `skill-list.md`。Cursor 配置变更见 [docs/cursor-setup.md](./cursor-setup.md)。
 
 ---
 
@@ -145,9 +157,12 @@ alwaysApply: true
 | Claude 插件清单 | `.claude-plugin/plugin.json` |
 | 本库 Claude 说明 | `CLAUDE.md` |
 | 项目级 Claude 示例 | `.claude/settings.json.example` |
-| Cursor 规则     | `.cursor/rules/sean-s-skills.mdc` |
-| 集成脚本        | `scripts/integrate-into-project.sh` |
+| Cursor 项目规则     | `.cursor/rules/sean-s-skills.mdc` |
+| Cursor 用户级规则   | 项目根目录 `rules/skill-usage.mdc`、`rules/confirmation-before-action.mdc` |
+| **Cursor 配置说明（Rules/Skills/Agents/MCP）** | **`docs/cursor-setup.md`** |
+| 集成脚本（Mac/Linux） | `scripts/integrate-into-project.sh` |
+| 集成脚本（Windows）   | `scripts/integrate-into-project.bat` |
 | 能力索引        | `docs/capabilities-index.md` |
-| Skill 列表与场景 | `docs/skills-reference.md` |
+| Skill 列表与场景 | `docs/skills-reference.md`（104 个） |
 | Agent 说明      | `docs/agents-reference.md` |
 | 工具注册与集成  | `tools/REGISTRY.md`、`tools/integrations/*.md` |

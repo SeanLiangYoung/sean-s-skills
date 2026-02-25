@@ -1,6 +1,7 @@
 # 开源 Skill 集成进度与能力记录
 
 本文档记录从 [skill-list.md](../skill-list.md) 中各开源仓库**获取的能力**、处理进度，以及纳入本库后对应的本地路径。  
+**skills/ 当前共 104 个**（含 2025-02-25 合并的 Cursor 用户级 user-skills，见 [skill-list.md](../skill-list.md)「Cursor 用户级 Skills」）。  
 最后更新：2025-02-25。
 
 ---
