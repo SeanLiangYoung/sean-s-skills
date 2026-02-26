@@ -1,7 +1,7 @@
 # 开源 Skill 集成进度与能力记录
 
 本文档记录从 [skill-list.md](../skill-list.md) 中各开源仓库**获取的能力**、处理进度，以及纳入本库后对应的本地路径。  
-**skills/ 当前共 104 个**（含 2025-02-25 合并的 Cursor 用户级 user-skills，见 [skill-list.md](../skill-list.md)「Cursor 用户级 Skills」）。  
+**skills/ 当前共 105 个**（含 2025-02-25 合并的 Cursor 用户级 user-skills，及后续集成的 zlibrary-to-notebooklm，见 [skill-list.md](../skill-list.md)）。  
 最后更新：2025-02-25。
 
 ---
@@ -20,6 +20,7 @@
 | 8 | Agent Skills (agentskills) | 已盘点 | 规范已纳入 spec/ |
 | 9 | Article writer | 已盘点 | 见说明 |
 | 10 | Superpowers | **已集成** 2025-02-25 | 见下方「Superpowers」 |
+| 11 | Z-Library to NotebookLM (zstmfhy) | **已集成** 2025-02-25 | skills/zlibrary-to-notebooklm |
 
 ---
 
@@ -133,6 +134,15 @@
 
 ---
 
+## 11. Z-Library to NotebookLM（zstmfhy）
+
+- **原仓库**: https://github.com/zstmfhy/zlibrary-to-notebooklm  
+- **状态**: **已集成** 2025-02-25。  
+- **能力**: 一键将 Z-Library 书籍自动下载并上传到 Google NotebookLM；支持 PDF/EPUB、自动转换与智能分块（>350k 词）；需 Playwright、NotebookLM CLI，会话保存在 `~/.zlibrary/`。  
+- **本库对应路径**: `skills/zlibrary-to-notebooklm`（已拷贝 SKILL.md、scripts/、docs/、requirements.txt、LICENSE、INSTALL.md；路径与 frontmatter 已适配本库规范）。
+
+---
+
 ## 获取过程中增加的能力（汇总）
 
 从上述仓库**盘点得到**、本库可新增或已部分具备的能力归纳如下：
@@ -145,7 +155,7 @@
 - **Superpowers**: 14 个开发流程与协作类 Skill。  
 - **Anthropics**: 4 个本库尚未包含的 Skill（internal-comms, mcp-builder, slack-gif-creator, webapp-testing）。  
 
-**说明**: 序号 1–6、10 已完成拷贝合并（2025-02-25）；序号 7–9 为参考/规范来源，未拷贝为独立 Skill 目录。各仓库 LICENSE 与版权归属仍以原仓库为准，本库仅汇总使用。
+**说明**: 序号 1–6、10、11 已完成拷贝合并（2025-02-25）；序号 7–9 为参考/规范来源，未拷贝为独立 Skill 目录。各仓库 LICENSE 与版权归属仍以原仓库为准，本库仅汇总使用。
 
 ---
 

@@ -1,6 +1,6 @@
 # Skills 说明 — 功能与使用场景
 
-本库 **skills/** 下共 **104 个** Skill，每个为符合 [Agent Skills 规范](../spec/specification.md) 的独立能力包（至少含 `SKILL.md`，可含 `scripts/`、`references/`、`assets/`）。其中 79 个为本库原有，12 个由原用户级 user-skills 合并而来（Vue 系列、element-plus-vue3、create-adaptable-composable、import-anthropic-skills、skill-usage-guide），其余为后续集成或新增。以下按**功能分类**列出各 Skill 的具体功能与使用场景。
+本库 **skills/** 下共 **105 个** Skill，每个为符合 [Agent Skills 规范](../spec/specification.md) 的独立能力包（至少含 `SKILL.md`，可含 `scripts/`、`references/`、`assets/`）。其中 79 个为本库原有，12 个由原用户级 user-skills 合并而来（Vue 系列、element-plus-vue3、create-adaptable-composable、import-anthropic-skills、skill-usage-guide），其余为后续集成或新增。以下按**功能分类**列出各 Skill 的具体功能与使用场景。
 
 ---
 
@@ -155,6 +155,7 @@
 | Skill | 功能简述 | 使用场景 |
 |-------|----------|----------|
 | **notebooklm** | 查询 Google NotebookLM 笔记本，获取基于文档的引用回答 | 用户提到 NotebookLM、分享 notebook 链接、或要「问我的文档」时使用。 |
+| **zlibrary-to-notebooklm** | 一键从 Z-Library 下载书籍并上传到 Google NotebookLM（PDF/EPUB、自动转换与分块） | 用户提供 Z-Library 书籍链接、要求「上传到 NotebookLM」「自动下载并读这本书」时使用；需合法资源。 |
 | **mcp-builder** | 构建与维护 MCP（Model Context Protocol）服务与工具 | 需要为 AI 提供自定义 MCP 工具或数据源时使用。 |
 | **internal-comms** | 内部沟通与文档模板（如公告、变更说明） | 需要内部公告、变更说明等模板与流程时使用。 |
 

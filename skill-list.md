@@ -2,7 +2,7 @@
 
 以下能力已**完成拷贝与合并**（2025-02-25），每行为本库路径或来源说明。原仓库、集成状态与冲突说明见 [docs/integration-progress.md](docs/integration-progress.md)。
 
-- **skills/**：当前共 **104 个** Skill 目录（原 79 个与用户级 user-skills 28 个已合并，去重后 12 个新增并入；后续有增补）。  
+- **skills/**：当前共 **105 个** Skill 目录（原 79 个与用户级 user-skills 28 个已合并，去重后 12 个新增并入；后续有增补，含 zlibrary-to-notebooklm）。  
 - **除 skills 外**：agents/（7 个子代理）、tools/（REGISTRY + 58 个集成文档）、templates/（Skill 模板），见下方「除 skills 外的 AI 能力」。
 
 **文档索引**：各 Skill 功能与使用场景见 [docs/skills-reference.md](docs/skills-reference.md)；能力总览与集成方式见 [docs/capabilities-index.md](docs/capabilities-index.md)、[docs/cookbook.md](docs/cookbook.md)。
@@ -64,6 +64,12 @@
 ## NotebookLM（PleasePrompto）
 
 - skills/notebooklm
+
+---
+
+## Z-Library to NotebookLM（zstmfhy）
+
+- skills/zlibrary-to-notebooklm
 
 ---
 
@@ -186,4 +192,4 @@
 
 ---
 
-*本列表按来源分类；完整 104 个 Skill 的目录名见 `skills/` 或 [docs/skills-reference.md](docs/skills-reference.md)。*
+*本列表按来源分类；完整 105 个 Skill 的目录名见 `skills/` 或 [docs/skills-reference.md](docs/skills-reference.md)。*
