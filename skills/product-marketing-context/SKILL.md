@@ -1,26 +1,27 @@
 ---
 name: product-marketing-context
-description: "When the user wants to create or update their product marketing context document. Also use when the user mentions 'product context,' 'marketing context,' 'set up context,' 'positioning,' or wants to avoid repeating foundational information across marketing tasks. Creates `.claude/product-marketing-context.md` that other marketing skills reference."
+description: "When the user wants to create or update their product marketing context document. Also use when the user mentions 'product context,' 'marketing context,' 'set up context,' 'positioning,' 'who is my target audience,' 'describe my product,' 'ICP,' 'ideal customer profile,' or wants to avoid repeating foundational information across marketing tasks. Use this at the start of any new project before using other marketing skills — it creates `.agents/product-marketing.md` that all other skills reference for product, audience, and positioning context."
 metadata:
-  version: 1.0.0
+  version: 2.1.0
 ---
 
 # Product Marketing Context
 
 You help users create and maintain a product marketing context document. This captures foundational positioning and messaging information that other marketing skills reference, so users don't repeat themselves.
 
-The document is stored at `.claude/product-marketing-context.md`.
+The document is stored at `.agents/product-marketing.md`.
 
 ## Workflow
 
 ### Step 1: Check for Existing Context
 
-First, check if `.claude/product-marketing-context.md` already exists.
+First, check if `.agents/product-marketing.md` already exists. Also check `.claude/product-marketing.md` and the legacy filename `product-marketing-context.md` (in either `.agents/` or `.claude/`) for older setups — if found anywhere other than `.agents/product-marketing.md`, offer to move it to the canonical location.
 
 **If it exists:**
-- Read it and summarize what's captured
+- Read it and summarize what's captured — note its current **Document version** and the last few **Changelog** entries so the user sees where the doc stands and what's changed recently
 - Ask which sections they want to update
 - Only gather info for those sections
+- On any substantive save, bump the version and add a changelog entry (see Step 4). This doc is the shared context every other marketing skill reads, so a dated paper trail of *what changed and why* is worth keeping.
 
 **If it doesn't exist, offer two options:**
 
@@ -47,7 +48,7 @@ For each section:
 3. Confirm accuracy
 4. Move to the next
 
-**Important:** Push for verbatim customer language. Exact phrases are more valuable than polished descriptions.
+Push for verbatim customer language — exact phrases are more valuable than polished descriptions because they reflect how customers actually think and speak, which makes copy more resonant.
 
 ---
 
@@ -128,12 +129,13 @@ The JTBD Four Forces:
 
 ## Step 3: Create the Document
 
-After gathering information, create `.claude/product-marketing-context.md` with this structure:
+After gathering information, create `.agents/product-marketing.md` with this structure:
 
 ```markdown
 # Product Marketing Context
 
-*Last updated: [date]*
+**Document version:** v1
+**Last updated:** [date]
 
 ## Product Overview
 **One-liner:**
@@ -219,16 +221,28 @@ After gathering information, create `.claude/product-marketing-context.md` with 
 **Business goal:**
 **Conversion action:**
 **Current metrics:**
+
+## Changelog
+*Newest first. One line per revision: what changed and why.*
+- v1 ([date]) — Initial context.
 ```
 
 ---
 
-## Step 4: Confirm and Save
+## Step 4: Confirm, Version, and Save
 
 - Show the completed document
 - Ask if anything needs adjustment
-- Save to `.claude/product-marketing-context.md`
-- Tell them: "Other marketing skills will now use this context automatically. Run `/product-marketing-context` anytime to update it."
+- **Set the version and changelog** — this is the paper trail for a doc every other skill reads:
+  - **New document:** set `Document version: v1` and a single Changelog entry — `- v1 ([today]) — Initial context.`
+  - **Updating an existing document:** increment the version (v2 → v3 …), update `Last updated` to today, and **prepend a new Changelog entry** at the top of the list (newest first) summarizing *what changed and why* in one line. Never rewrite or reorder past entries.
+  - A good entry names the sections touched and the reason, not "updated the doc." Examples:
+    - `- v3 (2026-07-16) — Repositioned from "email tool" to "deliverability platform"; added RevOps to the ICP.`
+    - `- v2 (2026-06-02) — Rewrote value prop and objections after 5 customer interviews; added competitor Acme.`
+  - Use today's date in ISO form (YYYY-MM-DD) for the entry and `Last updated`.
+  - **Pure typo-only fix:** don't bump the version or add a changelog entry — just save the correction. Every other change bumps the version and gets an entry. When the change is a real repositioning, say so plainly — downstream skills will now generate against the new context.
+- Save to `.agents/product-marketing.md`
+- Tell them: "Other marketing skills will now use this context automatically. The Changelog at the bottom tracks every revision — check it to see how your positioning has evolved. Run `/product-marketing` anytime to update it."
 
 ---
 

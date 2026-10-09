@@ -6,7 +6,7 @@ alwaysApply: true
 
 # Sean's Skills 库 — Cursor 规则
 
-本仓库是私人 Skill 库，包含 107 个 Skill、7 个 Agent、工具注册与模板。在 Cursor 中工作时：
+本仓库是私人 Skill 库，包含 122 个 Skill、20 个 Agent、工具注册与模板。在 Cursor 中工作时：
 
 1. **优先查阅能力说明**：具体功能与使用场景见项目内 [docs/capabilities-index.md](../../docs/capabilities-index.md)、[docs/skills-reference.md](../../docs/skills-reference.md)、[docs/agents-reference.md](../../docs/agents-reference.md)。
 2. **按任务选能力**：文档处理用 pdf/docx/xlsx/pptx；SEO 用 seo 或 seo-*；营销/CRO 用 skill-list 中对应项；图文/发布用 baoyu-*；开发流程用 writing-plans、test-driven-development、code-reviewer 等。

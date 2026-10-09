@@ -1,9 +1,15 @@
 ---
 name: seo-page
 description: >
-  Deep single-page SEO analysis covering on-page elements, content quality,
-  technical meta tags, schema, images, and performance. Use when user says
-  "analyze this page", "check page SEO", or provides a single URL for review.
+  Analyze one supplied URL across on-page, content, technical metadata, schema,
+  images, and performance. Use only for a single-page review.
+user-invocable: true
+argument-hint: "[url]"
+license: MIT
+metadata:
+  author: AgriciDaniel
+  version: "2.4.2"
+  category: seo
 ---
 
 # Single Page Analysis
@@ -13,6 +19,13 @@ description: >
 ### On-Page SEO
 - Title tag: 50-60 characters, includes primary keyword, unique
 - Meta description: 150-160 characters, compelling, includes keyword
+- Meta description is not a restatement of the title: run
+  `"${CLAUDE_PLUGIN_ROOT}/skills/seo/scripts/claude-seo" run metadata_template.py --title "<title>" --description "<desc>" --json`
+  (heuristic, deterministic string comparison). A description that opens by
+  repeating its own title and closes on a stock CTA ("Try it free now.",
+  "Start free!") is templated metadata, the shape bulk generation jobs produce
+  site-wide, and duplicated or templated metadata is a documented
+  content-quality problem regardless of how original the body copy is
 - H1: exactly one, matches page intent, includes keyword
 - H2-H6: logical hierarchy (no skipped levels), descriptive
 - URL: short, descriptive, hyphenated, no parameters
@@ -37,16 +50,16 @@ description: >
 - Detect all types (JSON-LD preferred)
 - Validate required properties
 - Identify missing opportunities
-- NEVER recommend HowTo (deprecated) or FAQ (restricted to gov/health)
+- Never recommend HowTo (deprecated) or FAQ for rich results (retired May 2026); existing FAQPage need not be removed, use QAPage for genuine Q&A
 
 ### Images
 - Alt text: present, descriptive, includes keywords where natural
 - File size: flag >200KB (warning), >500KB (critical)
 - Format: recommend WebP/AVIF over JPEG/PNG
 - Dimensions: width/height set for CLS prevention
-- Lazy loading: loading="lazy" on below-fold images
+- Lazy loading: report `lazy_method` per image (native | perfmatters | ewww | js-generic | none). Do not flag "not lazy-loaded" when JS lazy-loaders (Perfmatters, EWWW, lazysizes) are detected, they intentionally strip the native `loading="lazy"` attribute and use `data-src` placeholders
 
-### Core Web Vitals (reference only — not measurable from HTML alone)
+### Core Web Vitals (reference only, not measurable from HTML alone)
 - Flag potential LCP issues (huge hero images, render-blocking resources)
 - Flag potential INP issues (heavy JS, no async/defer)
 - Flag potential CLS issues (missing image dimensions, injected content)
@@ -65,10 +78,22 @@ Images:          XX/100  ████████░░
 ```
 
 ### Issues Found
-Organized by priority: Critical → High → Medium → Low
+Organized by priority: Critical -> High -> Medium -> Low
 
 ### Recommendations
 Specific, actionable improvements with expected impact
 
 ### Schema Suggestions
 Ready-to-use JSON-LD code for detected opportunities
+
+## DataForSEO Integration (Optional)
+
+If DataForSEO MCP tools are available, use `serp_organic_live_advanced` for real SERP positions and `backlinks_summary` for backlink data and spam scores.
+
+## Error Handling
+
+| Scenario | Action |
+|----------|--------|
+| URL unreachable (DNS failure, connection refused) | Report the error clearly. Do not guess page content. Suggest the user verify the URL and try again. |
+| Page requires authentication (401/403) | Report that the page is behind authentication. Suggest the user provide the rendered HTML directly or a publicly accessible URL. |
+| JavaScript-rendered content (empty body in HTML) | Note that key content may be rendered client-side. Analyze the available HTML and flag that results may be incomplete. Suggest using a browser-rendered snapshot if available. |

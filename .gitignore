@@ -1,2 +1,6 @@
 # 集成时使用的临时克隆目录，可删除以释放空间
 .tmp-integration/
+
+# Python validation caches
+__pycache__/
+*.py[cod]

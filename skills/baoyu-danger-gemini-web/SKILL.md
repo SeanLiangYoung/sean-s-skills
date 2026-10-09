@@ -1,20 +1,39 @@
 ---
 name: baoyu-danger-gemini-web
 description: Generates images and text via reverse-engineered Gemini Web API. Supports text generation, image generation from prompts, reference images for vision input, and multi-turn conversations. Use when other skills need image generation backend, or when user requests "generate image with Gemini", "Gemini text generation", or needs vision-capable AI generation.
+version: 1.56.2
+metadata:
+  openclaw:
+    homepage: https://github.com/JimLiu/baoyu-skills#baoyu-danger-gemini-web
+    requires:
+      anyBins:
+        - bun
+        - npx
 ---
 
 # Gemini Web Client
 
 Text/image generation via Gemini Web API. Supports reference images and multi-turn conversations.
 
+## User Input Tools
+
+When this skill prompts the user, follow this tool-selection rule (priority order):
+
+1. **Prefer built-in user-input tools** exposed by the current agent runtime — e.g., `AskUserQuestion`, `request_user_input`, `clarify`, `ask_user`, or any equivalent.
+2. **Fallback**: if no such tool exists, emit a numbered plain-text message and ask the user to reply with the chosen number/answer for each question.
+3. **Batching**: if the tool supports multiple questions per call, combine all applicable questions into a single call; if only single-question, ask them one at a time in priority order.
+
+Concrete `AskUserQuestion` references below are examples — substitute the local equivalent in other runtimes.
+
 ## Script Directory
 
 **Important**: All scripts are located in the `scripts/` subdirectory of this skill.
 
 **Agent Execution Instructions**:
-1. Determine this SKILL.md file's directory path as `SKILL_DIR`
-2. Script path = `${SKILL_DIR}/scripts/<script-name>.ts`
-3. Replace all `${SKILL_DIR}` in this document with the actual path
+1. Determine this SKILL.md file's directory path as `{baseDir}`
+2. Script path = `{baseDir}/scripts/<script-name>.ts`
+3. Resolve `${BUN_X}` runtime: if `bun` installed → `bun`; if `npx` available → `npx -y bun`; else suggest installing bun
+4. Replace all `{baseDir}` and `${BUN_X}` in this document with actual values
 
 **Script Reference**:
 | Script | Purpose |
@@ -43,55 +62,39 @@ Before first use, verify user consent for reverse-engineered API usage.
 
 ## Preferences (EXTEND.md)
 
-Use Bash to check EXTEND.md existence (priority order):
+Check EXTEND.md in priority order — the first one found wins:
 
-```bash
-# Check project-level first
-test -f .baoyu-skills/baoyu-danger-gemini-web/EXTEND.md && echo "project"
+| Priority | Path | Scope |
+|----------|------|-------|
+| 1 | `.baoyu-skills/baoyu-danger-gemini-web/EXTEND.md` | Project |
+| 2 | `${XDG_CONFIG_HOME:-$HOME/.config}/baoyu-skills/baoyu-danger-gemini-web/EXTEND.md` | XDG |
+| 3 | `$HOME/.baoyu-skills/baoyu-danger-gemini-web/EXTEND.md` | User home |
 
-# Then user-level (cross-platform: $HOME works on macOS/Linux/WSL)
-test -f "$HOME/.baoyu-skills/baoyu-danger-gemini-web/EXTEND.md" && echo "user"
-```
+If none found, use defaults.
 
-┌──────────────────────────────────────────────────────────┬───────────────────┐
-│                           Path                           │     Location      │
-├──────────────────────────────────────────────────────────┼───────────────────┤
-│ .baoyu-skills/baoyu-danger-gemini-web/EXTEND.md          │ Project directory │
-├──────────────────────────────────────────────────────────┼───────────────────┤
-│ $HOME/.baoyu-skills/baoyu-danger-gemini-web/EXTEND.md    │ User home         │
-└──────────────────────────────────────────────────────────┴───────────────────┘
-
-┌───────────┬───────────────────────────────────────────────────────────────────────────┐
-│  Result   │                                  Action                                   │
-├───────────┼───────────────────────────────────────────────────────────────────────────┤
-│ Found     │ Read, parse, apply settings                                               │
-├───────────┼───────────────────────────────────────────────────────────────────────────┤
-│ Not found │ Use defaults                                                              │
-└───────────┴───────────────────────────────────────────────────────────────────────────┘
-
-**EXTEND.md Supports**: Default model | Proxy settings | Custom data directory
+**EXTEND.md supports**: Default model, proxy settings, custom data directory.
 
 ## Usage
 
 ```bash
 # Text generation
-npx -y bun ${SKILL_DIR}/scripts/main.ts "Your prompt"
-npx -y bun ${SKILL_DIR}/scripts/main.ts --prompt "Your prompt" --model gemini-2.5-pro
+${BUN_X} {baseDir}/scripts/main.ts "Your prompt"
+${BUN_X} {baseDir}/scripts/main.ts --prompt "Your prompt" --model gemini-3-flash
 
 # Image generation
-npx -y bun ${SKILL_DIR}/scripts/main.ts --prompt "A cute cat" --image cat.png
-npx -y bun ${SKILL_DIR}/scripts/main.ts --promptfiles system.md content.md --image out.png
+${BUN_X} {baseDir}/scripts/main.ts --prompt "A cute cat" --image cat.png
+${BUN_X} {baseDir}/scripts/main.ts --promptfiles system.md content.md --image out.png
 
 # Vision input (reference images)
-npx -y bun ${SKILL_DIR}/scripts/main.ts --prompt "Describe this" --reference image.png
-npx -y bun ${SKILL_DIR}/scripts/main.ts --prompt "Create variation" --reference a.png --image out.png
+${BUN_X} {baseDir}/scripts/main.ts --prompt "Describe this" --reference image.png
+${BUN_X} {baseDir}/scripts/main.ts --prompt "Create variation" --reference a.png --image out.png
 
 # Multi-turn conversation
-npx -y bun ${SKILL_DIR}/scripts/main.ts "Remember: 42" --sessionId session-abc
-npx -y bun ${SKILL_DIR}/scripts/main.ts "What number?" --sessionId session-abc
+${BUN_X} {baseDir}/scripts/main.ts "Remember: 42" --sessionId session-abc
+${BUN_X} {baseDir}/scripts/main.ts "What number?" --sessionId session-abc
 
 # JSON output
-npx -y bun ${SKILL_DIR}/scripts/main.ts "Hello" --json
+${BUN_X} {baseDir}/scripts/main.ts "Hello" --json
 ```
 
 ## Options
@@ -100,7 +103,7 @@ npx -y bun ${SKILL_DIR}/scripts/main.ts "Hello" --json
 |--------|-------------|
 | `--prompt`, `-p` | Prompt text |
 | `--promptfiles` | Read prompt from files (concatenated) |
-| `--model`, `-m` | Model: gemini-3-pro (default), gemini-2.5-pro, gemini-2.5-flash |
+| `--model`, `-m` | Model: gemini-3-pro (default), gemini-3-flash, gemini-3-flash-thinking, gemini-3.1-pro-preview |
 | `--image [path]` | Generate image (default: generated.png) |
 | `--reference`, `--ref` | Reference images for vision input |
 | `--sessionId` | Session ID for multi-turn conversation |
@@ -114,13 +117,18 @@ npx -y bun ${SKILL_DIR}/scripts/main.ts "Hello" --json
 
 | Model | Description |
 |-------|-------------|
-| `gemini-3-pro` | Default, latest |
-| `gemini-2.5-pro` | Previous pro |
-| `gemini-2.5-flash` | Fast, lightweight |
+| `gemini-3-pro` | Default, latest 3.0 Pro |
+| `gemini-3-flash` | Fast, lightweight 3.0 Flash |
+| `gemini-3-flash-thinking` | 3.0 Flash with thinking |
+| `gemini-3.1-pro-preview` | 3.1 Pro preview (empty header, auto-routed) |
 
 ## Authentication
 
 First run opens browser for Google auth. Cookies cached automatically.
+
+When no explicit profile dir is set, cookie refresh may reuse an already-running local Chrome/Chromium debugging session tied to a standard user-data dir.
+Set `--profile-dir` or `GEMINI_WEB_CHROME_PROFILE_DIR` to force a dedicated profile and skip existing-session reuse.
+This is a best-effort CDP session reuse path, not the Chrome DevTools MCP prompt-based `--autoConnect` flow described in Chrome's official docs.
 
 Supported browsers (auto-detected): Chrome, Chrome Canary/Beta, Chromium, Edge.
 

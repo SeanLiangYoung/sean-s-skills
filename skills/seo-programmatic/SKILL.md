@@ -6,6 +6,13 @@ description: >
   thin content safeguards, and index bloat prevention. Use when user says
   "programmatic SEO", "pages at scale", "dynamic pages", "template pages",
   "generated pages", or "data-driven SEO".
+user-invocable: true
+argument-hint: "[url or plan]"
+license: MIT
+metadata:
+  author: AgriciDaniel
+  version: "2.4.2"
+  category: seo
 ---
 
 # Programmatic SEO Analysis & Planning
@@ -22,7 +29,7 @@ Evaluate the data powering programmatic pages:
 - Data quality checks:
   - Each record must have enough unique attributes to generate distinct content
   - Flag duplicate or near-duplicate records (>80% field overlap)
-  - Verify data freshness — stale data produces stale pages
+  - Verify data freshness; stale data produces stale pages
 
 ## Template Engine Planning
 
@@ -39,16 +46,16 @@ Design templates that produce unique, valuable pages:
 ## URL Pattern Strategy
 
 ### Common Patterns
-- `/tools/[tool-name]` — Tool/product directory pages
-- `/[city]/[service]` — Location + service pages
-- `/integrations/[platform]` — Integration landing pages
-- `/glossary/[term]` — Definition/reference pages
-- `/templates/[template-name]` — Downloadable template pages
+- `/tools/[tool-name]`: Tool/product directory pages
+- `/[city]/[service]`: Location + service pages
+- `/integrations/[platform]`: Integration landing pages
+- `/glossary/[term]`: Definition/reference pages
+- `/templates/[template-name]`: Downloadable template pages
 
 ### URL Rules
 - Lowercase, hyphenated slugs derived from data
 - Logical hierarchy reflecting site architecture
-- No duplicate slugs — enforce uniqueness at generation time
+- No duplicate slugs; enforce uniqueness at generation time
 - Keep URLs under 100 characters
 - No query parameters for primary content URLs
 - Consistent trailing slash usage (match existing site pattern)
@@ -59,7 +66,7 @@ Design templates that produce unique, valuable pages:
 - **Related items**: Auto-link to 3-5 related pages based on data attributes
 - **Breadcrumbs**: Generate BreadcrumbList schema from URL hierarchy
 - **Cross-linking**: Link between programmatic pages sharing attributes (same category, same city, same feature)
-- **Anchor text**: Use descriptive, varied anchor text — avoid exact-match keyword repetition
+- **Anchor text**: Use descriptive, varied anchor text. Avoid exact-match keyword repetition
 - Link density: 3-5 internal links per 1000 words (match seo-content guidelines)
 
 ## Thin Content Safeguards
@@ -68,17 +75,17 @@ Design templates that produce unique, valuable pages:
 
 | Metric | Threshold | Action |
 |--------|-----------|--------|
-| Pages without content review | 100+ | ⚠️ WARNING — require content audit before publishing |
-| Pages without justification | 500+ | 🛑 HARD STOP — require explicit user approval and thin content audit |
-| Unique content per page | <40% | ❌ Flag as thin content — likely penalty risk |
-| Word count per page | <300 | ⚠️ Flag for review — may lack sufficient value |
+| Pages without content review | 100+ | ⚠️ WARNING: require content audit before publishing |
+| Pages without justification | 500+ | 🛑 HARD STOP: require explicit user approval and thin content audit |
+| Unique content per page | <40% | ❌ Flag as thin content (likely penalty risk) |
+| Word count per page | <300 | ⚠️ Flag for review (may lack sufficient value) |
 
-### Scaled Content Abuse — Enforcement Context (2025-2026)
+### Scaled Content Abuse: Enforcement Context (2025-2026)
 
 Google's Scaled Content Abuse policy (introduced March 2024) saw major enforcement escalation in 2025:
 
-- **June 2025:** Wave of manual actions targeting websites with AI-generated content at scale
-- **August 2025:** SpamBrain spam update enhanced pattern detection for AI-generated link schemes and content farms
+- **June 2025:** Third-party reports described a wave of manual actions against sites publishing AI-generated content at scale (no Google announcement)
+- **August 2025:** Third-party/SEO-community reporting described stronger SpamBrain detection for AI-generated link schemes and content farms
 - **Result:** Google reported 45% reduction in low-quality, unoriginal content in search results post-March 2024 enforcement
 
 **Enhanced quality gates for programmatic pages:**
@@ -86,7 +93,7 @@ Google's Scaled Content Abuse policy (introduced March 2024) saw major enforceme
 - **Human review:** Minimum 5-10% sample review of generated pages before publishing
 - **Progressive rollout:** Publish in batches of 50-100 pages. Monitor indexing and rankings for 2-4 weeks before expanding. Never publish 500+ programmatic pages simultaneously without explicit quality review.
 - **Standalone value test:** Each page should pass: "Would this page be worth publishing even if no other similar pages existed?"
-- **Site reputation abuse:** If publishing programmatic content under a high-authority domain (not your own), this may trigger site reputation abuse penalties. Google began enforcing this aggressively in November 2024.
+- **Site reputation abuse:** Google clarified site reputation abuse language on 2024-11-19; treat third-party/hosted programmatic content as a policy risk. Since 2026-08-30 (announced 2026-08-28) enforcement depends on the searcher: manual actions apply outside the EEA, while for EEA users the third-party section may be categorized separately from the main domain. Report the risk for both audiences.
 
 > **Recommendation:** The WARNING gate at `<40% unique content` remains appropriate. Consider a HARD STOP at `<30%` unique content to prevent scaled content abuse risk.
 
@@ -109,18 +116,20 @@ Unique content % = (words unique to this page) / (total words on page) × 100
 
 Measure against all other pages in the programmatic set. Shared headers, footers, and navigation are excluded from the calculation. Template boilerplate text IS included.
 
+**Metadata is scored separately.** This calculation covers body copy only, so a set that passes it can still carry one generated title/description shape on every URL. Run `"${CLAUDE_PLUGIN_ROOT}/skills/seo/scripts/claude-seo" run metadata_template.py --pairs-file <file> --json` (heuristic, deterministic string comparison) over the whole set and treat a `site_risk` of `high` as a gate failure regardless of body uniqueness.
+
 ## Canonical Strategy
 
 - Every programmatic page must have a self-referencing canonical tag
-- Parameter variations (sort, filter, pagination) canonical to the base URL
-- Paginated series: canonical to page 1 or use rel=next/prev
+- Parameter variations (sort, filter) canonical to the base URL when duplicate or low-value
+- Paginated series: use self-canonical paginated pages when content differs; keep crawlable links
 - If programmatic pages overlap with manual pages, the manual page is canonical
 - No canonical to a different domain unless intentional cross-domain setup
 
 ## Sitemap Integration
 
 - Auto-generate sitemap entries for all programmatic pages
-- Split at 50,000 URLs per sitemap file (protocol limit)
+- Split at 50,000 URLs or 50MB uncompressed per sitemap file, whichever comes first (protocol limit)
 - Use sitemap index if multiple sitemap files needed
 - `<lastmod>` reflects actual data update timestamp (not generation time)
 - Exclude noindexed programmatic pages from sitemap
@@ -130,8 +139,8 @@ Measure against all other pages in the programmatic set. Shared headers, footers
 ## Index Bloat Prevention
 
 - **Noindex low-value pages**: Pages that don't meet quality gates
-- **Pagination**: Noindex paginated results beyond page 1 (or use rel=next/prev)
-- **Faceted navigation**: Noindex filtered views, canonical to base category
+- **Pagination**: Reserve noindex/canonical consolidation for true duplicates or low-value filtered views
+- **Faceted navigation**: Reserve noindex/canonical to base category for true duplicates or low-value filtered views
 - **Crawl budget**: For sites with >10k programmatic pages, monitor crawl stats in Search Console
 - **Thin page consolidation**: Merge records with insufficient data into aggregated pages
 - **Regular audits**: Monthly review of indexed page count vs intended count
@@ -160,3 +169,12 @@ Measure against all other pages in the programmatic set. Shared headers, footers
 - Template modifications
 - URL pattern adjustments
 - Quality gate compliance actions
+
+## Error Handling
+
+| Scenario | Action |
+|----------|--------|
+| URL unreachable | Report connection error with status code. Suggest verifying URL accessibility and checking for authentication requirements. |
+| No programmatic pages detected | Inform user that no template-generated or data-driven page patterns were found. Suggest checking if pages use client-side rendering or if the URL points to the correct section. |
+| Thin content threshold exceeded | Trigger quality gate warning. Report the unique content percentage and flag pages below 40% uniqueness. Require user acknowledgment before proceeding. |
+| Quality gate violation | Halt analysis at the HARD STOP threshold (500+ pages without justification or <30% unique content). Present findings and require explicit user approval to continue. |

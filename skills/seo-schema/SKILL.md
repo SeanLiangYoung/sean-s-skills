@@ -1,16 +1,25 @@
 ---
 name: seo-schema
 description: >
-  Detect, validate, and generate Schema.org structured data. JSON-LD format
-  preferred. Use when user says "schema", "structured data", "rich results",
-  "JSON-LD", or "markup".
+  Detect, validate, or generate Schema.org JSON-LD for a supplied page or
+  entity. Use only when structured data or rich-result markup is requested.
+user-invocable: true
+argument-hint: "[url]"
+license: MIT
+metadata:
+  author: AgriciDaniel
+  version: "2.4.2"
+  category: seo
 ---
 
 # Schema Markup Analysis & Generation
 
 ## Detection
 
-1. Scan page source for JSON-LD `<script type="application/ld+json">`
+1. Extract JSON-LD with `"${CLAUDE_PLUGIN_ROOT}/skills/seo/scripts/claude-seo" run parse_html.py --url <url> --json`
+   (or scan `<script type="application/ld+json">` in the page source). Flag any
+   block without `@context` or `@type`: Google cannot attach it to an entity (a
+   rating in such a block does not reach the Product).
 2. Check for Microdata (`itemscope`, `itemprop`)
 3. Check for RDFa (`typeof`, `property`)
 4. Always recommend JSON-LD as primary format (Google's stated preference)
@@ -28,32 +37,40 @@ description: >
   - Invalid date formats
 - Flag deprecated types (see below)
 
-## Schema Type Status (as of Feb 2026)
+## Schema Type Status (as of June 2026)
 
-Read `references/schema-types.md` for the full list. Key rules:
+Read `../seo/references/schema-types.md` for the full list. Key rules:
 
-### ACTIVE — recommend freely:
+### ACTIVE (recommend freely):
 Organization, LocalBusiness, SoftwareApplication, WebApplication, Product (with Certification markup as of April 2025), ProductGroup, Offer, Service, Article, BlogPosting, NewsArticle, Review, AggregateRating, BreadcrumbList, WebSite, WebPage, Person, ProfilePage, ContactPage, VideoObject, ImageObject, Event, JobPosting, Course, DiscussionForumPosting
 
-### VIDEO & SPECIALIZED — recommend freely:
+### VIDEO & SPECIALIZED (recommend freely):
 BroadcastEvent, Clip, SeekToAction, SoftwareSourceCode
 
 See `schema/templates.json` for ready-to-use JSON-LD templates for these types.
 
-> **JSON-LD and JavaScript rendering:** Per Google's December 2025 JS SEO guidance, structured data injected via JavaScript may face delayed processing. For time-sensitive markup (especially Product, Offer), include JSON-LD in the initial server-rendered HTML.
+> **JSON-LD and JavaScript rendering:** Google supports structured data generated with JavaScript, but its "Generate structured data with JavaScript" guide (last updated 2025-12-10) warns that dynamically generated Product markup can make Shopping crawls less frequent and less reliable for fast-changing price and availability. For time-sensitive markup (especially Product, Offer), include JSON-LD in the initial server-rendered HTML.
 
-### RESTRICTED — only for specific sites:
-- **FAQ**: ONLY for government and healthcare authority sites (restricted Aug 2023)
+### NO RICH RESULTS, KEEP IF USEFUL:
+- **FAQPage**: Google retired FAQ rich results for ALL sites on May 7, 2026 (supersedes the Aug 2023 gov/health restriction). No Google SERP rich-result benefit; flag existing FAQPage at Info (not Critical) rather than removal. For genuine user Q&A pages, use **QAPage**.
 
-### DEPRECATED — never recommend:
+### DEPRECATED (never recommend):
 - **HowTo**: Rich results removed September 2023
 - **SpecialAnnouncement**: Deprecated July 31, 2025
 - **CourseInfo, EstimatedSalary, LearningVideo**: Retired June 2025
-- **ClaimReview**: Retired from rich results June 2025
+- **ClaimReview**: No Search rich result since June 2025. Google's Fact Check Explorer still uses the markup, so fact-checking publishers may keep it; never recommend it for SERP features
 - **VehicleListing**: Retired from rich results June 2025
-- **Practice Problem**: Retired from rich results late 2025
-- **Dataset**: Retired from rich results late 2025
-- **Book Actions**: Deprecated then reversed — still functional as of Feb 2026 (historical note)
+- **Practice Problem**: Deprecation notice 2025-11-05; tooling support removed starting January 2026; documentation removed 2026-01-06
+- Search Console / Rich Results Test / appearance-filter support for CourseInfo, ClaimReview, EstimatedSalary, LearningVideo, SpecialAnnouncement, VehicleListing was removed 2025-09-09 (Search Console API through December 2025).
+
+### Still supported (despite earlier phase-out notices):
+- **Book Actions**: NOT deprecated. The June 2025 phase-out banner was removed on 2025-11-05 because a Search feature still uses the markup.
+
+### Supported for Dataset Search only:
+- **Dataset**: Not discontinued; consumed by Google Dataset Search, with no Google Search rich-result surface. Don't advise removal as if it were killed.
+
+### Still supported (do not flag):
+- QAPage (expanded comment-thread properties 2026-03-24), DiscussionForumPosting, Education Q&A (Quiz / `eduQuestionType=Flashcard`). For e-commerce, **hasAdultConsideration** (added 2026-05-20; value `https://schema.org/SexualContentConsideration`) is required for adult products. `Product.category` accepts `Text`, `CategoryCode`, or arrays mixing both.
 
 ## Generation
 
@@ -61,8 +78,10 @@ When generating schema for a page:
 1. Identify page type from content analysis
 2. Select appropriate schema type(s)
 3. Generate valid JSON-LD with all required + recommended properties
-4. Include only truthful, verifiable data — use placeholders clearly marked for user to fill
+4. Include only truthful, verifiable data. Use placeholders clearly marked for user to fill
 5. Validate output before presenting
+6. For review markup, reject fake reviews and undisclosed incentivized reviews.
+   An incentive must be clearly and prominently disclosed on the page.
 
 ## Common Schema Templates
 
@@ -137,8 +156,8 @@ When generating schema for a page:
 
 ## Output
 
-- `SCHEMA-REPORT.md` — detection and validation results
-- `generated-schema.json` — ready-to-use JSON-LD snippets
+- `SCHEMA-REPORT.md`: detection and validation results
+- `generated-schema.json`: ready-to-use JSON-LD snippets
 
 ### Validation Results
 | Schema | Type | Status | Issues |
@@ -149,3 +168,12 @@ When generating schema for a page:
 - Missing schema opportunities
 - Validation fixes needed
 - Generated code for implementation
+
+## Error Handling
+
+| Scenario | Action |
+|----------|--------|
+| URL unreachable | Report connection error with status code. Suggest verifying URL and checking if the page requires authentication. |
+| No schema markup found | Report that no JSON-LD, Microdata, or RDFa was detected. Recommend appropriate schema types based on page content analysis. |
+| Invalid JSON-LD syntax | Parse and report specific syntax errors (missing brackets, trailing commas, unquoted keys). Provide corrected JSON-LD output. |
+| Deprecated schema type detected | Flag the deprecated type with its retirement date. Recommend the current replacement type or advise removal if no replacement exists. |

@@ -226,7 +226,7 @@ from customers like you.
 | Day 60 | Address their specific cancel reason if resolved |
 | Day 90 | Final win-back with special offer |
 
-**For detailed win-back email sequences**: See the email-sequence skill.
+**For detailed win-back email sequences**: See the emails skill.
 
 ---
 
@@ -290,7 +290,7 @@ The most effective cancel flows use segmentation to show different offers to dif
 - [ ] Set up proactive intervention triggers
 - [ ] A/B test discount amounts and offer types
 - [ ] Segment flows by plan, tenure, and usage
-- [ ] Post-cancel win-back sequence (coordinate with email-sequence skill)
+- [ ] Post-cancel win-back sequence (coordinate with emails skill)
 - [ ] Cohort analysis: churn by channel, plan, tenure
 
 ---

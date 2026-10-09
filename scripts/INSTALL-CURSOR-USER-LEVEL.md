@@ -6,7 +6,7 @@
 
 | 内容 | 目标路径 |
 |------|----------|
-| **107 个 Skill** | `%USERPROFILE%\.cursor\skills\` |
+| **122 个 Skill** | `%USERPROFILE%\.cursor\skills\` |
 | **用户级规则** | `%USERPROFILE%\.cursor\rules\` |
 | **能力指南** | `%USERPROFILE%\.cursor\SKILLS_GUIDE.md` |
 
@@ -42,9 +42,19 @@
 
 ## 更新
 
-本库更新后，重新执行 `.\scripts\install-cursor-user-level.ps1` 即可覆盖 `.cursor\skills` 与 `.cursor\rules` 中的对应内容。
+本库更新后，重新执行 `.\scripts\install-cursor-user-level.ps1` 即可同步对应 Skill 与规则。已有 Skill、规则和指南先备份到 `.cursor\.sean-s-skills-backups\<时间戳>\`，随后整体替换同名 Skill 目录，清除上游已删除的文件；其他本地 Skill 保留。
 
 
 ## 新增能力与同步
 
-本库当前包含 107 个 Skill，含知识入库 `llm-wiki-ingest` 和审计报告 `code-security-audit`。脚本复制完整 Skill 目录并按实际有效目录生成规则和指南中的数量；重新运行可更新已有 Skill，不产生同名嵌套目录。知识库配置 `wiki-config.md` 随 Skill 同步，使用前确认其目标路径适用于当前机器。
+本库当前包含 122 个 Skill，含知识入库 `llm-wiki-ingest` 和审计报告 `code-security-audit`。脚本复制完整 Skill 目录并按实际有效目录生成规则和指南中的数量；重新运行可更新已有 Skill，不产生同名嵌套目录。知识库配置 `wiki-config.md` 随 Skill 同步，使用前确认其目标路径适用于当前机器。
+
+## 预览与恢复
+
+```powershell
+.\scripts\install-cursor-user-level.ps1 -WhatIf
+```
+
+`-WhatIf` 只预览，不创建目录或复制文件。可使用 `-CursorUserDir` 指定测试安装位置。源与目标不能相同或互相包含；脚本拒绝替换链接目录。
+
+备份包含更新前的完整 Skill、规则和指南。若已有个性化配置，更新后从备份中取回所需配置，例如 `llm-wiki-ingest/wiki-config.md`。Agent、工具索引和文档仍通过规则引用本库，当前有 20 个 Agent。

@@ -1,6 +1,6 @@
 # Skills 说明 — 功能与使用场景
 
-本库 **skills/** 下共 **107 个** Skill，每个为符合 [Agent Skills 规范](../spec/specification.md) 的独立能力包（至少含 `SKILL.md`，可含 `scripts/`、`references/`、`assets/`）。其中 79 个为本库原有，12 个由原用户级 user-skills 合并而来（Vue 系列、element-plus-vue3、create-adaptable-composable、import-anthropic-skills、skill-usage-guide），其余为后续集成或新增。以下按**功能分类**列出各 Skill 的具体功能与使用场景。
+本库 **skills/** 下共 **122 个** Skill，每个为符合 [Agent Skills 规范](../spec/specification.md) 的独立能力包（至少含 `SKILL.md`，可含 `scripts/`、`references/`、`assets/`）。其中 79 个为本库原有，12 个由原用户级 user-skills 合并而来（Vue 系列、element-plus-vue3、create-adaptable-composable、import-anthropic-skills、skill-usage-guide），其余为后续集成或新增。以下按**功能分类**列出各 Skill 的具体功能与使用场景。
 
 ---
 
@@ -184,3 +184,7 @@
 |-------|----------|----------|
 | [llm-wiki-ingest](../skills/llm-wiki-ingest/SKILL.md) | 分析文字、链接、文档、图片及音视频，提炼有依据的知识并整合保存到 llm-wiki | 资料入库、跨资料综合和知识页面更新；知识库位置见 skill 内的 wiki-config.md。 |
 | [code-security-audit](../skills/code-security-audit/SKILL.md) | 审计源码、依赖与部署配置，验证并复测漏洞，生成中文报告、证据、复现脚本与 ZIP 包 | 已授权仓库安全审计、SaaS 权限审查及 Azure DevOps/AKS 审查。 |
+
+## 2026-10-09 上游依赖补齐
+
+新增 SEO 总控依赖与营销研究依赖：`seo-agentic`, `seo-backlinks`, `seo-cluster`, `seo-content-brief`, `seo-dataforseo`, `seo-drift`, `seo-ecommerce`, `seo-flow`, `seo-google`, `seo-image-gen`, `seo-local`, `seo-maps`, `seo-sxo`, `competitor-profiling`, `customer-research`。各技能的完整说明见对应 `skills/<name>/SKILL.md`；来源与同步记录见 [上游更新报告](upstream-skills-update-2026-10-09.md)。

@@ -77,6 +77,72 @@ Load from `presets/{style}.md` and extract key elements:
 {typography_style}
 ```
 
+### Screen-Print Style Override
+
+When `style: screen-print`, replace the standard Core Principles and Text Style sections with:
+
+```
+## Core Principles
+
+- Screen print / silkscreen poster art — flat color blocks, NO gradients
+- Bold silhouettes and symbolic shapes over detailed rendering
+- Negative space as active storytelling element
+- If content involves sensitive or copyrighted figures, create stylistically similar silhouettes
+- One iconic focal point per image — conceptual, not literal
+
+## Color Rules (CRITICAL)
+
+- **2-5 FLAT COLORS MAXIMUM** — fewer colors = stronger impact
+- Choose ONE duotone pair from preset as dominant palette
+- Halftone dot patterns for tonal variation (NOT gradients)
+- Slight color layer misregistration for print authenticity
+
+## Text Style (CRITICAL)
+
+- Bold condensed sans-serif or Art Deco influenced lettering
+- Typography INTEGRATED into composition as design element
+- High contrast with background, stencil-cut quality
+- **DO NOT use delicate, thin, or handwritten fonts**
+
+## Composition
+
+- Geometric framing: circles, arches, triangles
+- Figure-ground inversion where possible (negative space forms secondary image)
+- Stencil-cut edges between color blocks, no outlines
+- Paper grain texture beneath all colors
+```
+
+## Palette Override
+
+When `--palette` is specified (or style has `default_palette` in frontmatter and no explicit `--palette`), palette colors **replace** the style's Color Palette in the prompt. Style rendering rules (Visual Elements, Typography, Style Rules) remain unchanged.
+
+Load from `palettes/{palette}.md` and override:
+
+```markdown
+## Palette Override: {palette_name}
+
+**Background**: {palette background color and hex}
+
+**Colors**:
+- Text: {text color and hex}
+- Secondary: {secondary text color and hex}
+- Zone 1: {zone color and hex}
+- Zone 2: {zone color and hex}
+- Zone 3: {zone color and hex}
+- Zone 4: {zone color and hex}
+- Accent: {accent color and hex}
+
+**Constraint**: {semantic constraint from palette}
+```
+
+**Override rules**:
+1. Palette Background **replaces** style's background color (keep style's texture description)
+2. Palette Colors **replace** style's Color Palette section entirely
+3. Palette Semantic Constraint is appended to the style section
+4. If no `--palette` and style has `default_palette` → load that palette
+5. If no `--palette` and no `default_palette` → use style's built-in colors (no override)
+6. Explicit `--palette` always overrides style's `default_palette`
+
 ## Layout Section Assembly
 
 Load from `elements/canvas.md` and extract relevant layout:
@@ -116,24 +182,46 @@ From outline entry:
 ```markdown
 ## Watermark
 
-Include a subtle watermark "{content}" positioned at {position}
-with approximately {opacity*100}% visibility. The watermark should
+Include a subtle watermark "{content}" positioned at {position}. The watermark should
 be legible but not distracting from the main content.
 ```
 
 ## Assembly Process
 
-### Step 1: Load Preset
+### Step 0: Resolve Style Preset (if `--preset` used)
+
+If user specified `--preset`, resolve to style + layout + palette from `references/style-presets.md`:
 
 ```python
-preset = load_preset(style_name)  # e.g., "notion"
+# e.g., --preset hand-drawn-edu → style=sketch-notes, layout=flow, palette=macaron
+style, layout, palette = resolve_preset(preset_name)
+```
+
+Explicit `--style`/`--layout`/`--palette` flags override preset values.
+
+### Step 1: Load Style Definition
+
+```python
+preset = load_preset(style_name)  # e.g., "sketch-notes"
 ```
 
 Extract:
-- Color palette
+- Color palette (may be overridden by palette)
 - Visual elements
 - Typography style
 - Best practices (do/don't)
+- `default_palette` from frontmatter (if present)
+
+### Step 1.5: Apply Palette Override (if applicable)
+
+```python
+# Priority: explicit --palette > preset palette > style default_palette > none
+palette = resolve_palette(cli_palette, preset_palette, style_default_palette)
+if palette:
+    palette_def = load_palette(palette)  # e.g., "macaron"
+    # Replace style colors with palette colors
+    # Keep style rendering rules (visual elements, typography, style rules)
+```
 
 ### Step 2: Load Layout
 
@@ -165,13 +253,9 @@ If preferences include watermark:
 When generating multiple images in a series:
 
 1. **Image 1 (cover)**: Generate without `--ref` — this establishes the visual anchor
-2. **Images 2+**: Always pass image 1 as `--ref` to the image generation skill:
-   ```bash
-   npx -y bun ${SKILL_DIR}/scripts/main.ts \
-     --promptfiles prompts/02-content-xxx.md \
-     --ref path/to/01-cover-xxx.png \
-     --image 02-content-xxx.png --ar 3:4 --quality 2k
-   ```
+2. **Images 2+**: Always pass image 1 as `--ref` to the installed image generation skill.
+   Read that skill's `SKILL.md` and use its documented interface rather than calling its scripts directly.
+   For each later image, use the assembled prompt file as input, set the output image path, keep aspect ratio `3:4`, use quality `2k`, and pass image 1 as the reference.
    This ensures the AI maintains the same character design, illustration style, and color rendering across the series.
 
 ### Step 6: Combine
@@ -253,19 +337,19 @@ Create a Xiaohongshu (Little Red Book) style infographic following these guideli
 ## Content
 
 **Position**: Content (Page 3 of 6)
-**Core Message**: ChatGPT使用技巧
+**Core Message**: ChatGPT 使用技巧
 
 **Text Content**:
 - Title: 「ChatGPT」
-- Subtitle: 最强AI助手
+- Subtitle: 最强 AI 助手
 - Points:
   - 写文案：给出框架，秒出初稿
   - 改文章：润色、翻译、总结
-  - 编程：写代码、找bug
+  - 编程：写代码、找 bug
   - 学习：解释概念、出题练习
 
 **Visual Concept**:
-ChatGPT logo居中，四周放射状展示功能点
+ChatGPT logo 居中，四周放射状展示功能点
 深色科技背景，霓虹绿点缀
 
 ---
@@ -286,6 +370,7 @@ Please use nano banana pro to generate the infographic based on the specificatio
 Before generating, verify:
 
 - [ ] Style section loaded from correct preset
+- [ ] Palette override applied (if `--palette` specified or style has `default_palette`)
 - [ ] Layout section matches outline specification
 - [ ] Content accurately reflects outline entry
 - [ ] Language matches source content

@@ -4,18 +4,22 @@
 # 示例: ./scripts/integrate-into-project.sh ../my-app
 #       ./scripts/integrate-into-project.sh /path/to/my-app /path/to/sean-s-skills
 
-set -e
+set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SEAN_SKILLS_PATH="${2:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 TARGET="${1:?用法: $0 <目标项目路径> [sean-s-skills 路径]}"
 TARGET="$(cd "$TARGET" && pwd)"
-REL_PATH=$(python3 -c "import os.path; print(os.path.relpath('$SEAN_SKILLS_PATH', '$TARGET').replace(os.sep, '/'))" 2>/dev/null || echo "../sean-s-skills")
+SEAN_SKILLS_PATH="$(cd "$SEAN_SKILLS_PATH" && pwd)"
+test -d "$SEAN_SKILLS_PATH/skills"
+test -d "$SEAN_SKILLS_PATH/agents"
+REL_PATH=$(PYTHONIOENCODING=utf-8 python3 -c 'import os, sys; p = lambda x: x[1] + ":" + x[2:] if os.name == "nt" and len(x) > 2 and x[0] == "/" and x[2] == "/" else x; print(os.path.relpath(p(sys.argv[1]), p(sys.argv[2])).replace(os.sep, "/"))' "$SEAN_SKILLS_PATH" "$TARGET")
 
 echo "目标项目: $TARGET"
 echo "Sean's Skills 路径: $SEAN_SKILLS_PATH"
 echo "相对路径: $REL_PATH"
 
 SKILL_COUNT=$(find "$SEAN_SKILLS_PATH/skills" -mindepth 2 -maxdepth 2 -type f -name SKILL.md | wc -l | tr -d "[:space:]")
+AGENT_COUNT=$(python3 -c 'import pathlib, sys; print(sum(p.read_text(encoding="utf-8-sig").startswith("---") for p in pathlib.Path(sys.argv[1]).glob("*.md")))' "$SEAN_SKILLS_PATH/agents")
 
 # 创建 .cursor/rules
 mkdir -p "$TARGET/.cursor/rules"
@@ -24,7 +28,7 @@ mkdir -p "$TARGET/.cursor/rules"
 RULE_FILE="$TARGET/.cursor/rules/use-sean-s-skills.mdc"
 cat > "$RULE_FILE" << EOF
 ---
-description: 使用 Sean's Skills 库中的 ${SKILL_COUNT} 个 Skill、7 个 Agent 与 tools；能力说明见该库 docs
+description: 使用 Sean's Skills 库中的 ${SKILL_COUNT} 个 Skill、${AGENT_COUNT} 个 Agent 与 tools；能力说明见该库 docs
 globs: 
 alwaysApply: true
 ---
@@ -53,6 +57,6 @@ done
 
 echo ""
 echo "集成完成。目标项目 .cursor/rules 已包含："
-echo "  - use-sean-s-skills.mdc（引用本库路径，AI 可直接使用 ${SKILL_COUNT} 个 Skill + 7 个 Agent）"
+echo "  - use-sean-s-skills.mdc（引用本库路径，AI 可直接使用 ${SKILL_COUNT} 个 Skill + ${AGENT_COUNT} 个 Agent）"
 echo "  - skill-usage.mdc、confirmation-before-action.mdc（用户级规则）"
 echo "在 Cursor 中打开目标项目即可使用，无需其他配置。"

@@ -30,10 +30,10 @@ scripts\integrate-into-project.bat D:\proj\my-app D:\repos\sean-s-skills
 **脚本会：**
 
 1. 在目标项目下创建 **`.cursor/rules/`**（若不存在）。
-2. 写入 **`use-sean-s-skills.mdc`**：规则中写明本库相对路径与能力索引文档位置，供 Cursor 优先查阅并引用本库的 skills/agents（107 个 Skill + 7 个 Agent）。
+2. 写入 **`use-sean-s-skills.mdc`**：规则中写明本库相对路径与能力索引文档位置，供 Cursor 优先查阅并引用本库的 skills/agents（122 个 Skill + 20 个 Agent）。
 3. 复制本库 **rules/** 下的 **`skill-usage.mdc`**、**`confirmation-before-action.mdc`** 到目标 `.cursor/rules/`，无需再手动复制用户级规则。
 
-在 Cursor 中打开目标项目即可使用，无需其他配置。若还需在目标项目中使用 **Claude Code** 插件，请手动在目标项目添加 `.claude/settings.json` 并将本库作为 `plugins.source`，或参见下方「方式一」「方式二」。
+在 Cursor 中打开目标项目即可使用，无需其他配置。若还需在目标项目中使用 **Claude Code** 插件，参见下方「方式一」「方式二」。
 
 ---
 
@@ -51,28 +51,11 @@ claude --plugin-dir /path/to/sean-s-skills
 
 ---
 
-## 方式二：Claude Code — 项目级配置（推荐用于长期使用）
+## 方式二：固定引用本库
 
-1. **克隆或引用本库**  
-   将 `sean-s-skills` 放在固定路径（如 `~/repos/sean-s-skills`），或作为目标项目的 git submodule。
+将本库克隆到固定位置；Cursor 使用上方集成脚本写入引用规则，Claude Code 启动时使用方式一的 `--plugin-dir` 参数。项目内独立使用部分技能时，按方式三复制完整目录。
 
-2. **在目标项目中添加 .claude 配置**  
-   在目标项目根目录创建 `.claude/settings.json`（若已有则合并），例如：
-
-   ```json
-   {
-     "plugins": [
-       {
-         "source": "../sean-s-skills",
-         "strict": false
-       }
-     ]
-   }
-   ```
-   `source` 可为相对路径（相对目标项目根）或绝对路径。
-
-3. **用 Cursor 时**  
-   在目标项目 `.cursor/rules/` 下增加一条规则，说明本库路径与能力索引（可复制 `scripts/integrate-into-project.sh` 生成的 `use-sean-s-skills.mdc` 内容，或见下方「方式四」）。
+集成脚本只写入目标项目的 `.cursor/rules/`，不会生成 `.claude/settings.json`。
 
 ---
 
@@ -125,7 +108,7 @@ alwaysApply: true
 
 ### 配方 1：在新项目中启用「SEO + 文档」能力
 
-- **Claude**：`claude --plugin-dir /path/to/sean-s-skills`，或按方式二在项目 `.claude/settings.json` 中加入本库插件。
+- **Claude**：`claude --plugin-dir /path/to/sean-s-skills`，或在固定位置克隆本库后使用方式一的启动参数。
 - **使用**：在对话中提及「SEO audit」「sitemap」「PDF」「Word」等，Claude 会调用本库 `seo`、`seo-audit`、`pdf`、`docx` 等 Skill。
 
 ### 配方 2：在内容项目中启用「宝雨」图文与发布
@@ -145,7 +128,7 @@ alwaysApply: true
 
 ### 配方 5：本库自身开发与迭代
 
-- 本库已包含 `.claude-plugin/plugin.json`、`.claude/`、`.cursor/rules/` 及项目根目录 **rules/**（用户级规则），在 Claude Code 或 Cursor 中直接打开本库即可使用全部 **107 个** Skill 与 7 个 Agent。
+- 本库已包含 `.claude-plugin/plugin.json` 及项目根目录 **rules/**（用户级规则），在 Claude Code 或 Cursor 中直接打开本库即可使用全部 **122 个** Skill 与 20 个 Agent。
 - 新增或修改 Skill 时参考 `spec/specification.md` 与 `templates/SKILL-template.md`，并更新 `docs/skills-reference.md` 与 `skill-list.md`。Cursor 配置变更见 [docs/cursor-setup.md](./cursor-setup.md)。
 
 ---
@@ -155,15 +138,13 @@ alwaysApply: true
 | 目的           | 路径或文件 |
 |----------------|------------|
 | Claude 插件清单 | `.claude-plugin/plugin.json` |
-| 本库 Claude 说明 | `CLAUDE.md` |
-| 项目级 Claude 示例 | `.claude/settings.json.example` |
-| Cursor 项目规则     | `.cursor/rules/sean-s-skills.mdc` |
+| Cursor 项目规则     | `rules/sean-s-skills.mdc` |
 | Cursor 用户级规则   | 项目根目录 `rules/skill-usage.mdc`、`rules/confirmation-before-action.mdc` |
 | **Cursor 配置说明（Rules/Skills/Agents/MCP）** | **`docs/cursor-setup.md`** |
 | 集成脚本（Mac/Linux） | `scripts/integrate-into-project.sh` |
 | 集成脚本（Windows）   | `scripts/integrate-into-project.bat` |
 | 能力索引        | `docs/capabilities-index.md` |
-| Skill 列表与场景 | `docs/skills-reference.md`（107 个） |
+| Skill 列表与场景 | `docs/skills-reference.md`（122 个） |
 | Agent 说明      | `docs/agents-reference.md` |
 | 工具注册与集成  | `tools/REGISTRY.md`、`tools/integrations/*.md` |
 
@@ -173,3 +154,7 @@ alwaysApply: true
 - **知识入库**：使用 `llm-wiki-ingest`，例如「分析这些资料并写入我的知识库」。首次使用检查 `skills/llm-wiki-ingest/wiki-config.md`，按目标库的维护规范写入；换机或复制到其他环境时先核实配置路径。
 - **审计报告**：使用 `code-security-audit`，例如「审计这个已授权仓库并生成报告和 ZIP 包」。按 Skill 执行审查与复测，再使用其 `scripts/build_audit_bundle.py` 生成交付包；输入契约见 `references/report-contract.md`。
 - **Cursor 用户级安装与更新**：运行 `scripts/install-cursor-user-level.ps1`，安装说明见 [安装指南](../scripts/INSTALL-CURSOR-USER-LEVEL.md)。脚本按含 `SKILL.md` 的目录计算数量，重新运行可同步新增能力。
+
+## 更新后验证
+
+运行 `python scripts/validate-skills.py` 检查技能元数据、源码语法与上游快照哈希。完整 YAML 校验可安装 PyYAML。Windows 集成脚本支持 Windows PowerShell 5.1；Unix 集成脚本需要 Bash 与 Python 3。Skill 和 Agent 数量由脚本自动统计。

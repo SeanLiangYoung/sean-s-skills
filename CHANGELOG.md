@@ -4,6 +4,18 @@
 
 ---
 
+## [未版本号] — 2026-10-09 — 外源 Skills 上游同步
+
+- 核验 9 个上游仓库，更新 91 个现有 Skill；10 个内容未变，保留本地适配。
+- 补齐 13 个 Claude SEO 依赖及 2 个 Marketing 引用依赖，当前顶层共 122 个 Skill。
+- 保留 Marketing 旧调用名称及 seo-audit 原来源；同步 SEO 配套资源并适配启动路径。
+- 增加上游提交与文件哈希锁定记录、详细核验报告；保留同步前本地 ZIP 副本。
+- 文档同步为 122 个 Skill、20 个 Agent；安装脚本动态统计能力并在备份后整体替换对应 Skill，支持预览与 Windows PowerShell 5.1。
+- 补齐 Claude 插件清单与可复用校验脚本，验证重复安装、旧文件清理、备份和带引号路径。
+- 通过 122 个 Skill frontmatter、150 个 Python 文件语法、42 个 JSON 文件解析及 1579 个文件哈希校验。
+
+---
+
 ## [未版本号] — 2026-10-09 — 新增知识入库与安全审计 Skills
 
 - 从本地 Codex skills 导入 `llm-wiki-ingest` 和 `code-security-audit`，保留配置、UI 元数据、参考资料及审计打包和自测脚本，排除 Python 缓存。

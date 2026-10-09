@@ -1,9 +1,7 @@
-import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import process from 'node:process';
 
 import { parseMarkdown } from './md-to-html.js';
 import {
@@ -11,9 +9,10 @@ import {
   CdpConnection,
   copyHtmlToClipboard,
   copyImageToClipboard,
-  findChromeExecutable,
+  findExistingChromeDebugPort,
   getDefaultProfileDir,
-  getFreePort,
+  launchChrome,
+  openPageSession,
   pasteFromClipboard,
   sleep,
   waitForChromeDebugPort,
@@ -61,25 +60,6 @@ interface ArticleOptions {
   chromePath?: string;
 }
 
-async function findExistingDebugPort(profileDir: string): Promise<number | null> {
-  const portFile = path.join(profileDir, 'DevToolsActivePort');
-  if (!fs.existsSync(portFile)) return null;
-
-  try {
-    const content = fs.readFileSync(portFile, 'utf-8').trim();
-    if (!content) return null;
-    const [portLine] = content.split(/\r?\n/);
-    const port = Number(portLine);
-    if (!Number.isFinite(port) || port <= 0) return null;
-
-    // Verify the port is actually active.
-    await waitForChromeDebugPort(port, 1500, { includeLastError: true });
-    return port;
-  } catch {
-    return null;
-  }
-}
-
 export async function publishArticle(options: ArticleOptions): Promise<void> {
   const { markdownPath, submit = false, profileDir = getDefaultProfileDir() } = options;
 
@@ -98,57 +78,38 @@ export async function publishArticle(options: ArticleOptions): Promise<void> {
   await writeFile(htmlPath, parsed.html, 'utf-8');
   console.log(`[x-article] HTML saved to: ${htmlPath}`);
 
-  const chromePath = options.chromePath ?? findChromeExecutable(CHROME_CANDIDATES_BASIC);
-  if (!chromePath) throw new Error('Chrome not found');
-
   await mkdir(profileDir, { recursive: true });
-  const existingPort = await findExistingDebugPort(profileDir);
-  const port = existingPort ?? await getFreePort();
+  const existingPort = await findExistingChromeDebugPort(profileDir);
+  const reusing = existingPort !== null;
+  let port = existingPort ?? 0;
 
-  if (existingPort) {
+  if (reusing) {
     console.log(`[x-article] Reusing existing Chrome instance on port ${port}`);
   } else {
     console.log(`[x-article] Launching Chrome...`);
-    const chromeArgs = [
-      `--remote-debugging-port=${port}`,
-      `--user-data-dir=${profileDir}`,
-      '--no-first-run',
-      '--no-default-browser-check',
-      '--disable-blink-features=AutomationControlled',
-      '--start-maximized',
-      X_ARTICLES_URL,
-    ];
-    if (process.platform === 'darwin') {
-      const appPath = chromePath.replace(/\/Contents\/MacOS\/Google Chrome$/, '');
-      spawn('open', ['-na', appPath, '--args', ...chromeArgs], { stdio: 'ignore' });
-    } else {
-      spawn(chromePath, chromeArgs, { stdio: 'ignore' });
-    }
+    const launched = await launchChrome(X_ARTICLES_URL, profileDir, CHROME_CANDIDATES_BASIC, options.chromePath);
+    port = launched.port;
   }
 
   let cdp: CdpConnection | null = null;
 
   try {
     const wsUrl = await waitForChromeDebugPort(port, 30_000, { includeLastError: true });
-    cdp = await CdpConnection.connect(wsUrl, 30_000, { defaultTimeoutMs: 30_000 });
+    cdp = await CdpConnection.connect(wsUrl, 30_000, { defaultTimeoutMs: 60_000 });
 
-    // Get page target
-    const targets = await cdp.send<{ targetInfos: Array<{ targetId: string; url: string; type: string }> }>('Target.getTargets');
-    let pageTarget = targets.targetInfos.find((t) => t.type === 'page' && t.url.startsWith(X_ARTICLES_URL));
-
-    if (!pageTarget) {
-      const { targetId } = await cdp.send<{ targetId: string }>('Target.createTarget', { url: X_ARTICLES_URL });
-      pageTarget = { targetId, url: X_ARTICLES_URL, type: 'page' };
-    }
-
-    const { sessionId } = await cdp.send<{ sessionId: string }>('Target.attachToTarget', { targetId: pageTarget.targetId, flatten: true });
-
-    await cdp.send('Page.enable', {}, { sessionId });
-    await cdp.send('Runtime.enable', {}, { sessionId });
-    await cdp.send('DOM.enable', {}, { sessionId });
+    const page = await openPageSession({
+      cdp,
+      reusing,
+      url: X_ARTICLES_URL,
+      matchTarget: (target) => target.type === 'page' && target.url.startsWith(X_ARTICLES_URL),
+      enablePage: true,
+      enableRuntime: true,
+      enableDom: true,
+    });
+    const { sessionId } = page;
 
     console.log('[x-article] Waiting for articles page...');
-    await sleep(3000);
+    await sleep(1000);
 
     // Wait for and click "create" button
     const waitForElement = async (selector: string, timeoutMs = 60_000): Promise<boolean> => {
@@ -203,7 +164,7 @@ export async function publishArticle(options: ArticleOptions): Promise<void> {
 
     // Check if we're on the articles list page (has Write button)
     console.log('[x-article] Looking for Write button...');
-    const writeButtonFound = await waitForElement('[data-testid="empty_state_button_text"]', 10_000);
+    const writeButtonFound = await waitForElement('[data-testid="empty_state_button_text"]', 30_000);
 
     if (writeButtonFound) {
       console.log('[x-article] Clicking Write button...');
@@ -211,6 +172,40 @@ export async function publishArticle(options: ArticleOptions): Promise<void> {
         expression: `document.querySelector('[data-testid="empty_state_button_text"]')?.click()`,
       }, { sessionId });
       await sleep(2000);
+    } else {
+      console.log('[x-article] Write button not found, looking for create button...');
+      const createClicked = await cdp.send<{ result: { value: boolean } }>('Runtime.evaluate', {
+        expression: `(() => {
+          const selectors = [
+            'button[aria-label="create"]',
+            'button[aria-label="Create"]',
+            'button[aria-label*="create" i]',
+            'button[aria-label*="write" i]',
+            'a[href="/compose/articles"]'
+          ];
+          for (const sel of selectors) {
+            const el = document.querySelector(sel);
+            if (el instanceof HTMLElement) {
+              el.click();
+              return true;
+            }
+          }
+          const buttons = [...document.querySelectorAll('button')];
+          const byText = buttons.find((el) => /^(create|write)$/i.test((el.textContent || '').trim()));
+          if (byText instanceof HTMLElement) {
+            byText.click();
+            return true;
+          }
+          return false;
+        })()`,
+        returnByValue: true,
+      }, { sessionId });
+      if (createClicked.result.value) {
+        console.log('[x-article] Create button clicked');
+        await sleep(2000);
+      } else {
+        console.log('[x-article] Create button not found');
+      }
     }
 
     // Wait for editor (title textarea)
@@ -644,6 +639,8 @@ export async function publishArticle(options: ArticleOptions): Promise<void> {
 
         if (imgUploadOk) {
           console.log(`[x-article] Image upload verified (${expectedImgCount} image block(s))`);
+          // Wait for DraftEditor DOM to stabilize after image insertion
+          await sleep(3000);
         } else {
           console.warn(`[x-article] Image upload not detected after 15s`);
           if (i === 0) {
@@ -653,6 +650,42 @@ export async function publishArticle(options: ArticleOptions): Promise<void> {
       }
 
       console.log('[x-article] All images processed.');
+
+      // Final verification: check placeholder residue and image count
+      console.log('[x-article] Running post-composition verification...');
+      const finalEditorContent = await cdp.send<{ result: { value: string } }>('Runtime.evaluate', {
+        expression: `document.querySelector('.DraftEditor-editorContainer [data-contents="true"]')?.innerText || ''`,
+        returnByValue: true,
+      }, { sessionId });
+
+      const remainingPlaceholders: string[] = [];
+      for (const img of parsed.contentImages) {
+        const regex = new RegExp(img.placeholder + '(?!\\d)');
+        if (regex.test(finalEditorContent.result.value)) {
+          remainingPlaceholders.push(img.placeholder);
+        }
+      }
+
+      const finalImgCount = await cdp.send<{ result: { value: number } }>('Runtime.evaluate', {
+        expression: `document.querySelectorAll('section[data-block="true"][contenteditable="false"] img[src^="blob:"]').length`,
+        returnByValue: true,
+      }, { sessionId });
+
+      const expectedCount = parsed.contentImages.length;
+      const actualCount = finalImgCount.result.value;
+
+      if (remainingPlaceholders.length > 0 || actualCount < expectedCount) {
+        console.warn('[x-article] ⚠ POST-COMPOSITION CHECK FAILED:');
+        if (remainingPlaceholders.length > 0) {
+          console.warn(`[x-article]   Remaining placeholders: ${remainingPlaceholders.join(', ')}`);
+        }
+        if (actualCount < expectedCount) {
+          console.warn(`[x-article]   Image count: expected ${expectedCount}, found ${actualCount}`);
+        }
+        console.warn('[x-article]   Please check the article before publishing.');
+      } else {
+        console.log(`[x-article] ✓ Verification passed: ${actualCount} image(s), no remaining placeholders.`);
+      }
     }
 
     // Before preview: blur editor to trigger save

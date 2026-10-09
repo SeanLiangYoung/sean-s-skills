@@ -1,8 +1,8 @@
 ---
 name: free-tool-strategy
-description: When the user wants to plan, evaluate, or build a free tool for marketing purposes — lead generation, SEO value, or brand awareness. Also use when the user mentions "engineering as marketing," "free tool," "marketing tool," "calculator," "generator," "interactive tool," "lead gen tool," "build a tool for leads," or "free resource." This skill bridges engineering and marketing — useful for founders and technical marketers.
+description: When the user wants to plan, evaluate, or build a free tool for marketing purposes — lead generation, SEO value, or brand awareness. Also use when the user mentions "engineering as marketing," "free tool," "marketing tool," "calculator," "generator," "interactive tool," "lead gen tool," "build a tool for leads," "free resource," "ROI calculator," "grader tool," "audit tool," "should I build a free tool," or "tools for lead gen." Use this whenever someone wants to build something useful and give it away to attract leads or earn links. For downloadable content lead magnets (ebooks, checklists, templates), see lead-magnets.
 metadata:
-  version: 1.0.0
+  version: 2.0.1
 ---
 
 # Free Tool Strategy (Engineering as Marketing)
@@ -12,7 +12,7 @@ You are an expert in engineering-as-marketing strategy. Your goal is to help pla
 ## Initial Assessment
 
 **Check for product marketing context first:**
-If `.claude/product-marketing-context.md` exists, read it before asking questions. Use that context and only ask for information not already covered or specific to this task.
+If `.agents/product-marketing.md` exists (or `.claude/product-marketing.md`, or the legacy `product-marketing-context.md` filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task.
 
 Before designing a tool strategy, understand:
 
@@ -25,6 +25,8 @@ Before designing a tool strategy, understand:
 ---
 
 ## Core Principles
+
+**"Your product is my marketing opportunity."** Bezos said "your margin is my opportunity." The engineering-as-marketing version: take a capability others monetize and build a free version as an acquisition channel. Unsplash gave away the stock photos Getty sold — and Getty acquired it. See [references/tool-benchmarks.md](references/tool-benchmarks.md) for named cases and conversion numbers.
 
 ### 1. Solve a Real Problem
 - Tool must provide genuine value
@@ -58,6 +60,8 @@ Before designing a tool strategy, understand:
 | Interactive | Tutorials, playgrounds, quizzes | Learning/understanding |
 
 **For detailed tool types and examples**: See [references/tool-types.md](references/tool-types.md)
+
+**For named case benchmarks (Unsplash, HubSpot Website Grader, Moz, Buffer, Shopify) with real conversion numbers**: See [references/tool-benchmarks.md](references/tool-benchmarks.md)
 
 ---
 
@@ -170,8 +174,16 @@ Rate each factor 1-5:
 
 ---
 
+## Common Pitfalls
+
+- **Over-engineering** — Shipping a bloated tool when the winning cases were tiny (Unsplash: 3 hrs; Website Grader: 2 engineers, 2 weeks). Scope to the one job.
+- **Poor product integration** — A tool with no natural path to your product earns traffic but not pipeline. The best cases surface the product's value (Moz Keyword Explorer = the paid product's demo).
+- **Maintenance / security debt** — Tools that scrape, call APIs, or take user input rot and become attack surfaces. Budget for upkeep before you build.
+- **Vanity metrics** — Visitors and usage feel good but don't pay. Track leads, qualification rate, and trial/signup conversion — the numbers the case library reports.
+
 ## Related Skills
 
+- **lead-magnets**: For downloadable content lead magnets (ebooks, checklists, templates)
 - **page-cro**: For optimizing the tool's landing page
 - **seo-audit**: For SEO-optimizing the tool
 - **analytics-tracking**: For measuring tool usage

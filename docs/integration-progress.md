@@ -1,8 +1,8 @@
 # 开源 Skill 集成进度与能力记录
 
 本文档记录从 [skill-list.md](../skill-list.md) 中各开源仓库**获取的能力**、处理进度，以及纳入本库后对应的本地路径。  
-**skills/ 当前共 107 个**（含 2025-02-25 合并的 Cursor 用户级 user-skills，及后续集成的 zlibrary-to-notebooklm，见 [skill-list.md](../skill-list.md)）。
-最后更新：2025-02-25。
+**skills/ 当前共 122 个**（含 2025-02-25 合并的 Cursor 用户级 user-skills，及后续集成的 zlibrary-to-notebooklm，见 [skill-list.md](../skill-list.md)）。
+最后更新：2026-10-09。
 
 ---
 
@@ -185,7 +185,7 @@
 
 ## 本地 Skills 同步（2026-10-09）
 
-从本地 Codex 用户级 skills 导入以下完整能力包，当前共 107 个 Skill；历史集成数量保留原记录。
+从本地 Codex 用户级 skills 导入以下完整能力包，当前共 122 个 Skill；历史集成数量保留原记录。
 
 | Skill | 用途 | 本库路径 |
 |-------|------|----------|
@@ -193,3 +193,9 @@
 | code-security-audit | 源码与部署安全审计、漏洞复测、报告及证据打包 | [SKILL.md](../skills/code-security-audit/SKILL.md) |
 
 保留配置、agents 元数据、references 和 scripts，排除 Python 缓存。
+
+## 2026-10-09 上游更新
+
+完成 9 个上游仓库核验：91 个现有 Skill 更新，10 个未变，补齐 15 个依赖 Skill。来源不明确或上游已移除的 Skill 保留。详见 [更新报告](upstream-skills-update-2026-10-09.md)。
+
+当前配套角色共 20 个（19 个 SEO + 1 个代码评审）；上述 2025 年集成条目保留历史数量。当前 SEO 上游路径为 `skills/seo`，运行脚本及资源放在本库 `skills/seo/`。

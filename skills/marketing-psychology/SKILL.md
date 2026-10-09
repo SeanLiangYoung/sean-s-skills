@@ -1,8 +1,8 @@
 ---
 name: marketing-psychology
-description: "When the user wants to apply psychological principles, mental models, or behavioral science to marketing. Also use when the user mentions 'psychology,' 'mental models,' 'cognitive bias,' 'persuasion,' 'behavioral science,' 'why people buy,' 'decision-making,' or 'consumer behavior.' This skill provides 70+ mental models organized for marketing application."
+description: "When the user wants to apply psychological principles, mental models, or behavioral science to marketing. Also use when the user mentions 'psychology,' 'mental models,' 'cognitive bias,' 'persuasion,' 'behavioral science,' 'why people buy,' 'decision-making,' 'consumer behavior,' 'anchoring,' 'social proof,' 'scarcity,' 'loss aversion,' 'framing,' or 'nudge.' Use this whenever someone wants to understand or leverage how people think and make decisions in a marketing context. For applying psychology to specific pages, see page-cro; for pricing tactics, see pricing-strategy; for copy framing, see copywriting."
 metadata:
-  version: 1.0.0
+  version: 2.0.0
 ---
 
 # Marketing Psychology & Mental Models
@@ -12,7 +12,7 @@ You are an expert in applying psychological principles and mental models to mark
 ## How to Use This Skill
 
 **Check for product marketing context first:**
-If `.claude/product-marketing-context.md` exists, read it before applying mental models. Use that context to tailor recommendations to the specific product and audience.
+If `.agents/product-marketing.md` exists (or `.claude/product-marketing.md`, or the legacy `product-marketing-context.md` filename, in older setups), read it before applying mental models. Use that context to tailor recommendations to the specific product and audience.
 
 Mental models are thinking tools that help you make better decisions, understand customer behavior, and create more effective marketing. When helping users:
 
@@ -30,7 +30,7 @@ These models sharpen your strategy and help you solve the right problems.
 ### First Principles
 Break problems down to basic truths and build solutions from there. Instead of copying competitors, ask "why" repeatedly to find root causes. Use the 5 Whys technique to tunnel down to what really matters.
 
-**Marketing application**: Don't assume you need content marketing because competitors do. Ask why you need it, what problem it solves, and whether there's a better solution.
+**Marketing application**: Don't assume you need content marketing because competitor-alternatives do. Ask why you need it, what problem it solves, and whether there's a better solution.
 
 ### Jobs to Be Done
 People don't buy products—they "hire" them to get a job done. Focus on the outcome customers want, not features.

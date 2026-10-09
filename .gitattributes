@@ -1,0 +1,4 @@
+# Keep shell launchers runnable after Windows checkouts.
+*.sh text eol=lf
+skills/seo/scripts/claude-seo text eol=lf
+*.bat text eol=crlf
