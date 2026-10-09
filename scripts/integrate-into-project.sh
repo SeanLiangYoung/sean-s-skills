@@ -15,6 +15,8 @@ echo "目标项目: $TARGET"
 echo "Sean's Skills 路径: $SEAN_SKILLS_PATH"
 echo "相对路径: $REL_PATH"
 
+SKILL_COUNT=$(find "$SEAN_SKILLS_PATH/skills" -mindepth 2 -maxdepth 2 -type f -name SKILL.md | wc -l | tr -d "[:space:]")
+
 # 创建 .cursor/rules
 mkdir -p "$TARGET/.cursor/rules"
 
@@ -22,7 +24,7 @@ mkdir -p "$TARGET/.cursor/rules"
 RULE_FILE="$TARGET/.cursor/rules/use-sean-s-skills.mdc"
 cat > "$RULE_FILE" << EOF
 ---
-description: 使用 Sean's Skills 库中的 91 个 Skill、7 个 Agent 与 tools；能力说明见该库 docs
+description: 使用 Sean's Skills 库中的 ${SKILL_COUNT} 个 Skill、7 个 Agent 与 tools；能力说明见该库 docs
 globs: 
 alwaysApply: true
 ---
@@ -33,11 +35,11 @@ alwaysApply: true
 
 - **Skill 库路径**（相对本项目）：\`${REL_PATH}\`
 - **能力索引**：\`${REL_PATH}/docs/capabilities-index.md\`
-- **Skill 列表与场景**（91 个）：\`${REL_PATH}/docs/skills-reference.md\`
+- **Skill 列表与场景**（${SKILL_COUNT} 个）：\`${REL_PATH}/docs/skills-reference.md\`
 - **Agent 列表**：\`${REL_PATH}/docs/agents-reference.md\`
 - **工具索引**：\`${REL_PATH}/tools/REGISTRY.md\`
 
-在完成文档、SEO、营销、图文、开发流程等任务时，优先查阅上述文档并按需引用 \`${REL_PATH}/skills/<name>/SKILL.md\` 或 \`${REL_PATH}/agents/*.md\` 中的说明。
+在完成文档、SEO、营销、图文、知识入库、安全审计、开发流程等任务时，优先查阅上述文档并按需引用 \`${REL_PATH}/skills/<name>/SKILL.md\` 或 \`${REL_PATH}/agents/*.md\` 中的说明。
 EOF
 echo "已创建 $RULE_FILE"
 
@@ -51,6 +53,6 @@ done
 
 echo ""
 echo "集成完成。目标项目 .cursor/rules 已包含："
-echo "  - use-sean-s-skills.mdc（引用本库路径，AI 可直接使用 91 个 Skill + 7 个 Agent）"
+echo "  - use-sean-s-skills.mdc（引用本库路径，AI 可直接使用 ${SKILL_COUNT} 个 Skill + 7 个 Agent）"
 echo "  - skill-usage.mdc、confirmation-before-action.mdc（用户级规则）"
 echo "在 Cursor 中打开目标项目即可使用，无需其他配置。"

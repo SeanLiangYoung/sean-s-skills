@@ -12,7 +12,7 @@
 |------|------|------|
 | **项目规则** | `.cursor/rules/sean-s-skills.mdc` | 本库专用规则：优先使用 skills/agents/tools，索引见 docs。 |
 | **用户级规则（已同步）** | `rules/skill-usage.mdc`、`rules/confirmation-before-action.mdc`（项目根目录） | 原 Cursor 用户级规则，已纳入本库：充分利用 Skills、执行前二次确认。 |
-| **Skills** | `skills/`（**104 个**） | 原 79 个本库 Skill 与 28 个用户级 Skill 已合并为一；重复项以本库为主并补入 user-skills 内容，仅 user-skills 有的 12 个已并入；当前共 104 个目录。 |
+| **Skills** | `skills/`（**107 个**） | 原 79 个本库 Skill 与 28 个用户级 Skill 已合并为一；重复项以本库为主并补入 user-skills 内容，仅 user-skills 有的 12 个已并入；当前共 107 个目录。 |
 | **Subagents** | `agents/`（7 个） | 子代理定义均在仓库内。 |
 | **MCP 推荐清单** | 见下方「4. MCP 配置」 | 推荐启用的 MCP 列表与恢复说明（MCP 实际由 Cursor 管理）。 |
 
@@ -26,7 +26,7 @@
 
 ### 新项目如何快速用上「本库」配置
 
-1. **让新项目使用本库的 104 个 Skill + 7 个 Agent**  
+1. **让新项目使用本库的 107 个 Skill + 7 个 Agent**
    在新项目根目录执行（或将本库 clone 到合适路径后执行）：
    ```bash
    # 从本库根目录执行
@@ -61,7 +61,7 @@
 | 项目 | 说明 |
 |------|------|
 | **路径** | `skills/<name>/` |
-| **数量** | **104 个**（原 79 个本库 Skill 与 28 个用户级 Skill 已合并；重复 16 个以本库为主并补入 user-skills 内容，仅 user-skills 有的 12 个已并入；当前共 104 个目录）。 |
+| **数量** | **107 个**（原 79 个本库 Skill 与 28 个用户级 Skill 已合并；重复 16 个以本库为主并补入 user-skills 内容，仅 user-skills 有的 12 个已并入；当前共 107 个目录）。 |
 | **索引** | [docs/skills-reference.md](./skills-reference.md)（按分类列出功能与使用场景） |
 | **清单** | 根目录 [skill-list.md](../skill-list.md)（按来源分类） |
 

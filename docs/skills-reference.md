@@ -1,6 +1,6 @@
 # Skills 说明 — 功能与使用场景
 
-本库 **skills/** 下共 **105 个** Skill，每个为符合 [Agent Skills 规范](../spec/specification.md) 的独立能力包（至少含 `SKILL.md`，可含 `scripts/`、`references/`、`assets/`）。其中 79 个为本库原有，12 个由原用户级 user-skills 合并而来（Vue 系列、element-plus-vue3、create-adaptable-composable、import-anthropic-skills、skill-usage-guide），其余为后续集成或新增。以下按**功能分类**列出各 Skill 的具体功能与使用场景。
+本库 **skills/** 下共 **107 个** Skill，每个为符合 [Agent Skills 规范](../spec/specification.md) 的独立能力包（至少含 `SKILL.md`，可含 `scripts/`、`references/`、`assets/`）。其中 79 个为本库原有，12 个由原用户级 user-skills 合并而来（Vue 系列、element-plus-vue3、create-adaptable-composable、import-anthropic-skills、skill-usage-guide），其余为后续集成或新增。以下按**功能分类**列出各 Skill 的具体功能与使用场景。
 
 ---
 
@@ -176,3 +176,11 @@
 - **按关键词/意图选**：上述表格中的「使用场景」多为触发短语或任务类型，可按用户表述匹配。  
 - **编排与组合**：全站 SEO 用 **seo**；单点 SEO 用对应 **seo-***；营销流程可组合 **product-marketing-context** + **email-sequence** + **paid-ads** 等。  
 - **详细说明在 SKILL.md**：每个 Skill 的完整步骤、命令与约束见 `skills/<name>/SKILL.md`。
+
+
+## 本地知识入库与安全审计（2026-10-09 新增）
+
+| Skill | 功能简述 | 使用场景 |
+|-------|----------|----------|
+| [llm-wiki-ingest](../skills/llm-wiki-ingest/SKILL.md) | 分析文字、链接、文档、图片及音视频，提炼有依据的知识并整合保存到 llm-wiki | 资料入库、跨资料综合和知识页面更新；知识库位置见 skill 内的 wiki-config.md。 |
+| [code-security-audit](../skills/code-security-audit/SKILL.md) | 审计源码、依赖与部署配置，验证并复测漏洞，生成中文报告、证据、复现脚本与 ZIP 包 | 已授权仓库安全审计、SaaS 权限审查及 Azure DevOps/AKS 审查。 |

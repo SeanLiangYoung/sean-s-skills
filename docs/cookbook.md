@@ -30,7 +30,7 @@ scripts\integrate-into-project.bat D:\proj\my-app D:\repos\sean-s-skills
 **脚本会：**
 
 1. 在目标项目下创建 **`.cursor/rules/`**（若不存在）。
-2. 写入 **`use-sean-s-skills.mdc`**：规则中写明本库相对路径与能力索引文档位置，供 Cursor 优先查阅并引用本库的 skills/agents（104 个 Skill + 7 个 Agent）。
+2. 写入 **`use-sean-s-skills.mdc`**：规则中写明本库相对路径与能力索引文档位置，供 Cursor 优先查阅并引用本库的 skills/agents（107 个 Skill + 7 个 Agent）。
 3. 复制本库 **rules/** 下的 **`skill-usage.mdc`**、**`confirmation-before-action.mdc`** 到目标 `.cursor/rules/`，无需再手动复制用户级规则。
 
 在 Cursor 中打开目标项目即可使用，无需其他配置。若还需在目标项目中使用 **Claude Code** 插件，请手动在目标项目添加 `.claude/settings.json` 并将本库作为 `plugins.source`，或参见下方「方式一」「方式二」。
@@ -145,7 +145,7 @@ alwaysApply: true
 
 ### 配方 5：本库自身开发与迭代
 
-- 本库已包含 `.claude-plugin/plugin.json`、`.claude/`、`.cursor/rules/` 及项目根目录 **rules/**（用户级规则），在 Claude Code 或 Cursor 中直接打开本库即可使用全部 **104 个** Skill 与 7 个 Agent。
+- 本库已包含 `.claude-plugin/plugin.json`、`.claude/`、`.cursor/rules/` 及项目根目录 **rules/**（用户级规则），在 Claude Code 或 Cursor 中直接打开本库即可使用全部 **107 个** Skill 与 7 个 Agent。
 - 新增或修改 Skill 时参考 `spec/specification.md` 与 `templates/SKILL-template.md`，并更新 `docs/skills-reference.md` 与 `skill-list.md`。Cursor 配置变更见 [docs/cursor-setup.md](./cursor-setup.md)。
 
 ---
@@ -163,6 +163,13 @@ alwaysApply: true
 | 集成脚本（Mac/Linux） | `scripts/integrate-into-project.sh` |
 | 集成脚本（Windows）   | `scripts/integrate-into-project.bat` |
 | 能力索引        | `docs/capabilities-index.md` |
-| Skill 列表与场景 | `docs/skills-reference.md`（104 个） |
+| Skill 列表与场景 | `docs/skills-reference.md`（107 个） |
 | Agent 说明      | `docs/agents-reference.md` |
 | 工具注册与集成  | `tools/REGISTRY.md`、`tools/integrations/*.md` |
+
+
+## 知识入库与审计报告
+
+- **知识入库**：使用 `llm-wiki-ingest`，例如「分析这些资料并写入我的知识库」。首次使用检查 `skills/llm-wiki-ingest/wiki-config.md`，按目标库的维护规范写入；换机或复制到其他环境时先核实配置路径。
+- **审计报告**：使用 `code-security-audit`，例如「审计这个已授权仓库并生成报告和 ZIP 包」。按 Skill 执行审查与复测，再使用其 `scripts/build_audit_bundle.py` 生成交付包；输入契约见 `references/report-contract.md`。
+- **Cursor 用户级安装与更新**：运行 `scripts/install-cursor-user-level.ps1`，安装说明见 [安装指南](../scripts/INSTALL-CURSOR-USER-LEVEL.md)。脚本按含 `SKILL.md` 的目录计算数量，重新运行可同步新增能力。

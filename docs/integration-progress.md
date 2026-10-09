@@ -1,7 +1,7 @@
 # 开源 Skill 集成进度与能力记录
 
 本文档记录从 [skill-list.md](../skill-list.md) 中各开源仓库**获取的能力**、处理进度，以及纳入本库后对应的本地路径。  
-**skills/ 当前共 105 个**（含 2025-02-25 合并的 Cursor 用户级 user-skills，及后续集成的 zlibrary-to-notebooklm，见 [skill-list.md](../skill-list.md)）。  
+**skills/ 当前共 107 个**（含 2025-02-25 合并的 Cursor 用户级 user-skills，及后续集成的 zlibrary-to-notebooklm，见 [skill-list.md](../skill-list.md)）。
 最后更新：2025-02-25。
 
 ---
@@ -181,3 +181,15 @@
 - 集成后本库 `skills/` 下共 **79 个** Skill 目录（含原有 + 本次新增 **skills/seo** 编排 Skill）。  
 - **除 skills 外**：已集成 agents/（7 个）、tools/（REGISTRY + 50+ 集成文档）、templates/（1 个模板）、详见上文「除 skills 外的 AI 能力集成」。  
 - 临时克隆目录 `.tmp-integration` 可删除以释放空间：`rm -rf .tmp-integration`。
+
+
+## 本地 Skills 同步（2026-10-09）
+
+从本地 Codex 用户级 skills 导入以下完整能力包，当前共 107 个 Skill；历史集成数量保留原记录。
+
+| Skill | 用途 | 本库路径 |
+|-------|------|----------|
+| llm-wiki-ingest | 多模态资料分析、知识综合与知识库写入 | [SKILL.md](../skills/llm-wiki-ingest/SKILL.md) |
+| code-security-audit | 源码与部署安全审计、漏洞复测、报告及证据打包 | [SKILL.md](../skills/code-security-audit/SKILL.md) |
+
+保留配置、agents 元数据、references 和 scripts，排除 Python 缓存。

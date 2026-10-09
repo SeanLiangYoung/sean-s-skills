@@ -21,6 +21,8 @@ alwaysApply: true
 | Vue 开发、路由、Pinia、测试 | vue-* 系列、element-plus-vue3 |
 | 网页 UI、海报、算法艺术 | frontend-design / canvas-design / algorithmic-art |
 | 测试 Web 应用、建 MCP | webapp-testing / mcp-builder |
+| 资料分析、知识库入库与知识页面更新 | llm-wiki-ingest |
+| 已授权代码安全审计、审计报告与证据打包 | code-security-audit |
 | 不确定选哪个 | 读取 skill-usage-guide 或 ~/.cursor/SKILLS_GUIDE.md |
 
 ## 执行流程

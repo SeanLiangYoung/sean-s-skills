@@ -1,10 +1,12 @@
-# 被 integrate-into-project.bat 调用：根据相对路径生成 use-sean-s-skills.mdc 并写入目标路径。
+﻿# 被 integrate-into-project.bat 调用：根据相对路径生成 use-sean-s-skills.mdc 并写入目标路径。
 # 用法: .\integrate-into-project-impl.ps1 -RelPath "..\sean-s-skills" -OutFile "D:\proj\my-app\.cursor\rules\use-sean-s-skills.mdc"
-param([Parameter(Mandatory)]$RelPath, [Parameter(Mandatory)]$OutFile)
+param([Parameter(Mandatory)]$RelPath, [Parameter(Mandatory)]$OutFile, [string]$SkillsRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) "skills"))
+$ErrorActionPreference = "Stop"
+$SkillCount = @(Get-ChildItem -LiteralPath $SkillsRoot -Directory | Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName "SKILL.md") -PathType Leaf }).Count
 $p = $RelPath -replace '\\', '/'
 $content = @"
 ---
-description: 使用 Sean's Skills 库中的 91 个 Skill、7 个 Agent 与 tools；能力说明见该库 docs
+description: 使用 Sean's Skills 库中的 $SkillCount 个 Skill、7 个 Agent 与 tools；能力说明见该库 docs
 globs: 
 alwaysApply: true
 ---
@@ -15,11 +17,11 @@ alwaysApply: true
 
 - **Skill 库路径**（相对本项目）：``$p``
 - **能力索引**：``$p/docs/capabilities-index.md``
-- **Skill 列表与场景**（91 个）：``$p/docs/skills-reference.md``
+- **Skill 列表与场景**（$SkillCount 个）：``$p/docs/skills-reference.md``
 - **Agent 列表**：``$p/docs/agents-reference.md``
 - **工具索引**：``$p/tools/REGISTRY.md``
 
-在完成文档、SEO、营销、图文、开发流程等任务时，优先查阅上述文档并按需引用 ``$p/skills/<name>/SKILL.md`` 或 ``$p/agents/*.md`` 中的说明。
+在完成文档、SEO、营销、图文、知识入库、安全审计、开发流程等任务时，优先查阅上述文档并按需引用 ``$p/skills/<name>/SKILL.md`` 或 ``$p/agents/*.md`` 中的说明。
 "@
 $dir = [System.IO.Path]::GetDirectoryName($OutFile)
 if (-not [System.IO.Directory]::Exists($dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }

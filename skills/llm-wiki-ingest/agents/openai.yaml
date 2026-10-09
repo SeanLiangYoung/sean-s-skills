@@ -1,0 +1,4 @@
+interface:
+  display_name: "资料分析与 Wiki 入库"
+  short_description: "分析文字、文档、图片与音视频等多模态材料，提炼有依据的知识并整合到 LLM Wiki"
+  default_prompt: "使用 $llm-wiki-ingest 分析我提供的材料，提炼有价值的内容并保存到我的 llm-wiki。"

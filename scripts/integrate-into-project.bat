@@ -32,7 +32,8 @@ if not exist "%TARGET%\.cursor\rules" mkdir "%TARGET%\.cursor\rules"
 
 REM 1. 写入 use-sean-s-skills.mdc（调用 PowerShell 脚本生成）
 set "RULE_FILE=%TARGET%\.cursor\rules\use-sean-s-skills.mdc"
-powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%\integrate-into-project-impl.ps1" -RelPath "%REL_PATH%" -OutFile "%RULE_FILE%"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%\integrate-into-project-impl.ps1" -RelPath "%REL_PATH%" -OutFile "%RULE_FILE%" -SkillsRoot "%SEAN_SKILLS_PATH%\skills"
+if errorlevel 1 exit /b 1
 echo 已创建 %RULE_FILE%
 
 REM 2. 复制用户级规则
@@ -47,7 +48,7 @@ if exist "%SEAN_SKILLS_PATH%\rules\confirmation-before-action.mdc" (
 
 echo.
 echo 集成完成。目标项目 .cursor\rules 已包含：
-echo   - use-sean-s-skills.mdc（引用本库路径，AI 可直接使用 91 个 Skill + 7 个 Agent）
+echo   - use-sean-s-skills.mdc（引用本库路径，AI 可直接使用 本库全部 Skill + 7 个 Agent）
 echo   - skill-usage.mdc、confirmation-before-action.mdc（用户级规则）
 echo 在 Cursor 中打开目标项目即可使用，无需其他配置。
 endlocal

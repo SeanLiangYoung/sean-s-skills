@@ -2,7 +2,7 @@
 
 以下能力已**完成拷贝与合并**（2025-02-25），每行为本库路径或来源说明。原仓库、集成状态与冲突说明见 [docs/integration-progress.md](docs/integration-progress.md)。
 
-- **skills/**：当前共 **105 个** Skill 目录（原 79 个与用户级 user-skills 28 个已合并，去重后 12 个新增并入；后续有增补，含 zlibrary-to-notebooklm）。  
+- **skills/**：当前共 **107 个** Skill 目录（原 79 个与用户级 user-skills 28 个已合并，去重后 12 个新增并入；后续有增补，含 zlibrary-to-notebooklm）。
 - **除 skills 外**：agents/（7 个子代理）、tools/（REGISTRY + 58 个集成文档）、templates/（Skill 模板），见下方「除 skills 外的 AI 能力」。
 
 **文档索引**：各 Skill 功能与使用场景见 [docs/skills-reference.md](docs/skills-reference.md)；能力总览与集成方式见 [docs/capabilities-index.md](docs/capabilities-index.md)、[docs/cookbook.md](docs/cookbook.md)。
@@ -18,6 +18,13 @@
   - REGISTRY.md, integrations/*.md（58 个）（来源：Marketing skills）
 - **templates/** — Skill 创建模板
   - SKILL-template.md（来源：Anthropics skills）
+
+---
+
+## 本地自用 Skills（2026-10-09 新增）
+
+- [skills/llm-wiki-ingest](skills/llm-wiki-ingest/SKILL.md) — 分析多模态资料，将知识整合写入 llm-wiki。
+- [skills/code-security-audit](skills/code-security-audit/SKILL.md) — 执行代码安全审计，生成报告、证据、复现脚本与 ZIP 包。
 
 ---
 
@@ -192,4 +199,4 @@
 
 ---
 
-*本列表按来源分类；完整 105 个 Skill 的目录名见 `skills/` 或 [docs/skills-reference.md](docs/skills-reference.md)。*
+*本列表按来源分类；完整 107 个 Skill 的目录名见 `skills/` 或 [docs/skills-reference.md](docs/skills-reference.md)。*
